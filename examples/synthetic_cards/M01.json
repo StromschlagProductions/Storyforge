@@ -1,0 +1,16 @@
+{
+  "id": "M01",
+  "version": 1,
+  "category": "M",
+  "name": "Synthetischer Perspektivwechsel",
+  "principle": "Eine neutrale Beispielsituation wird aus einem anderen Blickwinkel betrachtet.",
+  "creative_instruction": "Formuliere zwei mögliche Blickwinkel für die erfundene Testsituation.",
+  "applications": ["Stoffidee"],
+  "quality_questions": ["Unterscheiden sich die beiden Blickwinkel klar?"],
+  "weaknesses": ["Der Wechsel kann bloß oberflächlich sein."],
+  "audio_relevance": "Die Hörperspektive kann eine andere Wahrnehmung nahelegen.",
+  "related_ids": ["N01"],
+  "source": "Synthetische Testkarte SF-003A; keine redaktionelle Forschungsreferenz",
+  "keywords": ["perspektive", "stimme"],
+  "task_types": ["stoffidee", "dialog"]
+}

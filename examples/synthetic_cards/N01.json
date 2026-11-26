@@ -1,0 +1,16 @@
+{
+  "id": "N01",
+  "version": 1,
+  "category": "N",
+  "name": "Synthetische Informationslücke",
+  "principle": "Eine erfundene Testinformation bleibt vorübergehend offen.",
+  "creative_instruction": "Benenne, welche Information in der Testsituation fehlt.",
+  "applications": ["Offene Frage"],
+  "quality_questions": ["Ist die offene Information für die Figur bedeutsam?"],
+  "weaknesses": ["Ein bloßes Rätsel kann ohne emotionale Folge bleiben."],
+  "audio_relevance": "Ein ausgelassenes Geräusch kann die Lücke hörbar machen.",
+  "related_ids": ["M01"],
+  "source": "Synthetische Testkarte SF-003A; keine redaktionelle Forschungsreferenz",
+  "keywords": ["frage", "lücke"],
+  "task_types": ["stoffidee"]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "D01",
+  "version": 1,
+  "category": "D",
+  "name": "Synthetischer Prüfkontrast",
+  "principle": "Zwei erfundene Möglichkeiten werden auf einen klaren Unterschied geprüft.",
+  "creative_instruction": "Vergleiche die zwei Testmöglichkeiten in einem Satz.",
+  "applications": ["Vergleich"],
+  "quality_questions": ["Ist der Unterschied für die Szene relevant?"],
+  "weaknesses": ["Ein formaler Unterschied erzeugt noch keine Spannung."],
+  "audio_relevance": "Die Unterschiede können sich in zwei Klangräumen zeigen.",
+  "related_ids": [],
+  "source": "Synthetische Testkarte SF-003A; keine redaktionelle Forschungsreferenz",
+  "keywords": ["vergleich", "kontrast"],
+  "task_types": ["kritik"]
+}

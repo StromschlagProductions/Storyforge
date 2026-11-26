@@ -1,0 +1,16 @@
+{
+  "id": "A01",
+  "version": 1,
+  "category": "A",
+  "name": "Synthetische Klangspur",
+  "principle": "Ein erfundenes Geräusch markiert eine Veränderung im Teststoff.",
+  "creative_instruction": "Beschreibe eine mögliche Veränderung des Geräuschs.",
+  "applications": ["Akustische Skizze"],
+  "quality_questions": ["Ist die Veränderung ohne Erklärung hörbar?"],
+  "weaknesses": ["Das Geräusch kann eine Bedeutung zu deutlich vorgeben."],
+  "audio_relevance": "Die Karte betrifft unmittelbar die akustische Vermittlung.",
+  "related_ids": [],
+  "source": "Synthetische Testkarte SF-003A; keine redaktionelle Forschungsreferenz",
+  "keywords": ["klang", "geräusch"],
+  "task_types": ["stoffidee", "dialog"]
+}
