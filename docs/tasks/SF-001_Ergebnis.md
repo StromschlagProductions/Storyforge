@@ -18,7 +18,7 @@ SF-001: `pyproject.toml`, `src/storyforge/__init__.py`, `src/storyforge/models.p
 
 ## Tests
 
-`.venv/bin/python -m pytest -q` in einer lokalen virtuellen Umgebung: **9 bestanden**. Tests decken einen vollständigen Prozessneustart, Migration, eindeutige Werke und Universumszuordnung, Variantenisolation, dauerhafte Entscheidungen, fehlende Autorfreigabe, atomaren Rollback bei Fehler, konkurrierende und abgelehnte Entwürfe, Wiederherstellung, ungültige Eingaben sowie JSON- und Markdown-Export ab. Der GitHub-Actions-Workflow prüft künftig Python 3.12 auf Linux und Windows; sein erster Windows-Lauf ist erst nach dem Push beobachtbar.
+`.venv/bin/python -m pytest -q` in einer lokalen virtuellen Umgebung: **9 bestanden**. Tests decken einen vollständigen Prozessneustart, Migration, eindeutige Werke und Universumszuordnung, Variantenisolation, dauerhafte Entscheidungen, fehlende Autorfreigabe, atomaren Rollback bei Fehler, konkurrierende und abgelehnte Entwürfe, Wiederherstellung, ungültige Eingaben sowie JSON- und Markdown-Export ab. GitHub Actions hat Python 3.12 auf Linux und Windows im [ersten Workflowlauf](https://github.com/StromschlagProductions/Storyforge/actions/runs/45886709677) erfolgreich geprüft. Die Actions-Versionen wurden anschließend wegen eines Node-20-Hinweises aktualisiert.
 
 ## Abschlussprüfung der Akzeptanzkriterien
 
@@ -28,7 +28,7 @@ SF-001: `pyproject.toml`, `src/storyforge/__init__.py`, `src/storyforge/models.p
 4. Atomare Freigabe: erfüllt; explizite Freigabe erforderlich, Rollback nach simuliertem Fehler geprüft.
 5. Veraltete Revisionen: erfüllt; zweite Speicherinstanz kann einen überholten Entwurf nicht freigeben.
 6. JSON/Markdown: erfüllt; aktuelle Variantenköpfe und Revisionshistorie konsistent gelesen, atomarer Dateiersatz mit Umlautpfad geprüft.
-7. Automatisierte Kernfunktionstests: erfüllt; 9 pytest-Tests. Windows-Ausführung durch CI vorgesehen, Ergebnis nach erstem Lauf prüfen.
+7. Automatisierte Kernfunktionstests: erfüllt; 9 pytest-Tests. Der erste Linux- und Windows-CI-Lauf war erfolgreich.
 
 Vor der Veröffentlichung: ausschließlich bereinigte Konzeptdateien, Quellcode, synthetische Tests, README und Workflow aufgenommen. Keine Projekt-Datenbank, privaten Hörspielskripte, unveröffentlichten Stoffideen oder Zugangsdaten im Commit.
 
