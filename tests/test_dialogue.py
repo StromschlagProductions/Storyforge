@@ -1,5 +1,7 @@
 import json
 import sqlite3
+import subprocess
+import sys
 from threading import Event
 from uuid import uuid4
 
@@ -80,10 +82,14 @@ def test_strukturierter_entwurf_braucht_autorfreigabe_und_bleibt_bei_modellwechs
         memory.approve(result.proposal_id, approved_by="Autor", explicit_approval=False)
     approved = memory.approve(result.proposal_id, approved_by="Autor", explicit_approval=True)
     assert approved.snapshot.ideas == [idea]
+    with sqlite3.connect(memory.path) as db:
+        schema_before = db.execute("SELECT name, sql FROM sqlite_master ORDER BY name").fetchall()
     other_provider = FakeProvider(["Eine alternative Deutung."], model="fake-b")
     answer = Dialogue(Memory(memory.path), other_provider).ask(project.id, branch.id, "Was nun?")
     assert answer.model == "fake-b" and answer.proposal_id is None
     assert memory.get_revision(memory.list_branches(project.id)[0].head_id).snapshot.ideas == [idea]
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT name, sql FROM sqlite_master ORDER BY name").fetchall() == schema_before
 
 
 @pytest.mark.parametrize("answer", ["kein JSON", "{}", '{"base_revision_id":"ungültig"}'])
@@ -177,4 +183,126 @@ def test_doppelte_ideen_ids_aus_modell_werden_abgelehnt(tmp_path):
     with pytest.raises(InvalidModelResponse):
         Dialogue(memory, FakeProvider([response])).ask(project.id, branch.id, "Ideen", structured=True)
     assert memory.list_branches(project.id)[0].head_id == branch.head_id
+    assert memory.list_turns(project.id, branch.id) == []
+
+
+def test_manifest_entspricht_exakt_dem_gesendeten_projektkontext(tmp_path):
+    memory = Memory(tmp_path / "dialog.db")
+    project = memory.create_project("Klangprobe", universe_title="Synthetisches Universum")
+    branch = memory.list_branches(project.id)[0]
+    idea = Idea(id=uuid4(), title="Takt", premise="Ein unregelmäßiger Puls.")
+    decision = Decision(id=uuid4(), target="Rhythmus", action="behalten",
+                        rationale="Prägt den Stoff", author="Autor")
+    revision = memory.approve(memory.propose(branch.id, branch.head_id,
+                                              Snapshot(ideas=[idea], decisions=[decision]), "Start").id,
+                              approved_by="Autor", explicit_approval=True)
+    provider = FakeProvider(["Erste Antwort", "Zweite Antwort"])
+    dialogue = Dialogue(memory, provider)
+    dialogue.ask(project.id, branch.id, "Erste Frage")
+    result = dialogue.ask(project.id, branch.id, "Zweite Frage")
+    messages = provider.requests[1].messages
+    core = json.loads(messages[0]["content"].split("Projektkontext:\n", 1)[1])
+    manifest = result.manifest
+    assert core["projekt"]["id"] == manifest["project_id"] == str(project.id)
+    assert core["projekt"]["werk_id"] == manifest["work_id"]
+    assert core["projekt"]["universum_id"] == manifest["universe_id"]
+    assert core["variante"]["id"] == manifest["branch_id"] == str(branch.id)
+    assert core["revision"] == {"id": manifest["revision_id"], "hash": manifest["revision_hash"]}
+    assert core["revision"]["id"] == str(revision.id)
+    assert [item["id"] for item in core["stoffideen"]] == manifest["idea_ids"]
+    assert [item["id"] for item in core["autorenentscheidungen"]] == manifest["decision_ids"]
+    turns = memory.list_turns(project.id, branch.id)
+    assert manifest["history_turn_ids"] == [turn["id"] for turn in turns[:2]]
+    assert [(message["role"], message["content"]) for message in messages[1:-1]] == [
+        (turn["role"], turn["content"]) for turn in turns[:2]]
+    assert messages[-1] == {"role": "user", "content": "Zweite Frage"}
+
+
+def test_dialogverlauf_nach_vollstaendigem_prozessneustart(tmp_path):
+    path = tmp_path / "Dialog äöü.sqlite3"
+    first_process = """import json, sys
+from storyforge import Dialogue, FakeProvider, Memory
+m = Memory(sys.argv[1]); p = m.create_project('Synthetischer Dialog')
+b = m.list_branches(p.id)[0]
+Dialogue(m, FakeProvider(['Erste Antwort'])).ask(p.id, b.id, 'Erste Frage')
+print(json.dumps({'project_id': str(p.id), 'branch_id': str(b.id)}))
+"""
+    result = subprocess.run([sys.executable, "-c", first_process, str(path)],
+                            capture_output=True, text=True, check=True)
+    ids = json.loads(result.stdout)
+    second_process = """import json, sys
+from uuid import UUID
+from storyforge import Dialogue, FakeProvider, Memory
+m = Memory(sys.argv[1]); p = UUID(sys.argv[2]); b = UUID(sys.argv[3])
+fake = FakeProvider(['Zweite Antwort'])
+r = Dialogue(m, fake).ask(p, b, 'Zweite Frage')
+print(json.dumps({'history': r.manifest['history_turn_ids'],
+                  'roles': [x['role'] for x in fake.requests[0].messages],
+                  'turns': len(m.list_turns(p, b))}))
+"""
+    reopened = subprocess.run([sys.executable, "-c", second_process, str(path),
+                               ids["project_id"], ids["branch_id"]],
+                              capture_output=True, text=True, check=True)
+    data = json.loads(reopened.stdout)
+    assert len(data["history"]) == 2
+    assert data["roles"] == ["system", "user", "assistant", "user"]
+    assert data["turns"] == 4
+
+
+def test_abbruch_nach_modellantwort_speichert_nichts(tmp_path):
+    memory = Memory(tmp_path / "dialog.db")
+    project = memory.create_project("Test")
+    branch = memory.list_branches(project.id)[0]
+    cancel = Event()
+
+    class CancelOnReturn(FakeProvider):
+        def generate(self, request, token=None):
+            answer = super().generate(request, token)
+            cancel.set()
+            return answer
+
+    for structured, answer in ((False, "Antwort"), (True, _change(branch.head_id, []))):
+        cancel.clear()
+        with pytest.raises(ModelCancelled):
+            Dialogue(memory, CancelOnReturn([answer])).ask(
+                project.id, branch.id, "Aufgabe", structured=structured, cancel=cancel)
+    assert memory.list_turns(project.id, branch.id) == []
+    assert memory.list_branches(project.id)[0].head_id == branch.head_id
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT COUNT(*) FROM proposals").fetchone()[0] == 0
+
+
+def test_konkurrenz_waehrend_modellaufruf_und_fremde_variante(tmp_path):
+    memory = Memory(tmp_path / "dialog.db")
+    project = memory.create_project("Test")
+    other = memory.create_project("Anderes Projekt")
+    branch = memory.list_branches(project.id)[0]
+    foreign_branch = memory.list_branches(other.id)[0]
+    provider = FakeProvider(["Darf nicht aufgerufen werden"])
+    with pytest.raises(KeyError):
+        Dialogue(memory, provider).ask(project.id, foreign_branch.id, "Frage")
+    assert provider.requests == []
+
+    class ChangeDuringCall(FakeProvider):
+        def generate(self, request, token=None):
+            answer = super().generate(request, token)
+            memory.approve(memory.propose(branch.id, branch.head_id, Snapshot(), "Parallel").id,
+                           approved_by="Autor", explicit_approval=True)
+            return answer
+
+    with pytest.raises(ConflictError):
+        Dialogue(memory, ChangeDuringCall([_change(branch.head_id, [])])).ask(
+            project.id, branch.id, "Entwurf", structured=True)
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT COUNT(*) FROM proposals WHERE status='offen'").fetchone()[0] == 0
+
+
+def test_unterstuetzung_strukturierter_antworten_wird_vorher_geprueft(tmp_path):
+    memory = Memory(tmp_path / "dialog.db")
+    project = memory.create_project("Test")
+    branch = memory.list_branches(project.id)[0]
+    provider = FakeProvider(["Antwort"], capabilities=("text",))
+    with pytest.raises(ValueError, match="strukturierten"):
+        Dialogue(memory, provider).ask(project.id, branch.id, "Entwurf", structured=True)
+    assert provider.requests == []
     assert memory.list_turns(project.id, branch.id) == []

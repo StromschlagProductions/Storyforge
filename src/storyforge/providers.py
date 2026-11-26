@@ -148,7 +148,7 @@ class OllamaProvider:
             content = data["message"]["content"]
             model = data["model"]
             if (not isinstance(content, str) or not content.strip() or
-                    not isinstance(model, str) or not model.strip() or data.get("done") is False):
+                    not isinstance(model, str) or not model.strip() or data.get("done") is not True):
                 raise ValueError("Leerer oder ungültiger Inhalt")
             return ModelResponse(content=content, model=model,
                                  duration_seconds=data["total_duration"] / 1_000_000_000

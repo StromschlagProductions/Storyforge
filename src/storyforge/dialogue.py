@@ -9,7 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from .memory import ConflictError, Memory, NotFoundError
 from .models import Idea, Snapshot
-from .providers import InvalidModelResponse, ModelProvider, ModelRequest, ModelResponse
+from .providers import (InvalidModelResponse, ModelCancelled, ModelProvider,
+                        ModelRequest, ModelResponse)
 
 
 class ContextLimitError(ValueError):
@@ -96,6 +97,8 @@ class Dialogue:
             ModelRequest(messages=messages,
                          format_schema=ProposedChange.model_json_schema() if structured else None,
                          timeout_seconds=self.timeout_seconds), cancel)
+        if cancel is not None and cancel.is_set():
+            raise ModelCancelled("Anfrage abgebrochen")
         if not response.content.strip():
             raise InvalidModelResponse("Leere Modellantwort")
         proposal_id = None
@@ -114,6 +117,8 @@ class Dialogue:
                                                     proposed[item.id].protected_elements)):
                     raise InvalidModelResponse("Geschütztes Stoffelement wurde entfernt")
             snapshot = Snapshot(ideas=change.ideas, decisions=revision.snapshot.decisions)
+            if cancel is not None and cancel.is_set():
+                raise ModelCancelled("Anfrage abgebrochen")
             try:
                 proposal_id = self.memory.propose(branch_id, revision.id, snapshot, change.description).id
             except ConflictError:

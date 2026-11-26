@@ -52,7 +52,8 @@ class OllamaTestServer:
 
 def test_ollama_freie_und_strukturierte_antworten():
     body = {"model": "lokales-testmodell", "message": {"content": "Ein neuer Ansatz."},
-            "total_duration": 2_000_000_000, "prompt_eval_count": 12, "eval_count": 5}
+            "done": True, "total_duration": 2_000_000_000,
+            "prompt_eval_count": 12, "eval_count": 5}
     with OllamaTestServer(body) as server:
         provider = OllamaProvider("lokales-testmodell", base_url=server.url,
                                   options={"temperature": 0.3})
@@ -77,7 +78,7 @@ def test_ollama_fehler_und_ungueltige_antwort():
     with OllamaTestServer(b"kein JSON") as server:
         with pytest.raises(InvalidModelResponse):
             OllamaProvider("test", base_url=server.url).generate(ModelRequest(messages=[]))
-    with OllamaTestServer({"model": "test", "message": {"content": ""}}) as server:
+    with OllamaTestServer({"model": "test", "message": {"content": ""}, "done": True}) as server:
         with pytest.raises(InvalidModelResponse):
             OllamaProvider("test", base_url=server.url).generate(ModelRequest(messages=[]))
     with pytest.raises(ValueError, match="lokal"):
@@ -85,7 +86,7 @@ def test_ollama_fehler_und_ungueltige_antwort():
 
 
 def test_ollama_timeout_und_abbruch():
-    body = {"model": "test", "message": {"content": "spät"}}
+    body = {"model": "test", "message": {"content": "spät"}, "done": True}
     with OllamaTestServer(body, delay=0.3) as server:
         provider = OllamaProvider("test", base_url=server.url)
         with pytest.raises(ModelTimeout):
@@ -107,8 +108,15 @@ def test_ollama_offline_und_optionale_metriken():
     provider = OllamaProvider("test", base_url=f"http://127.0.0.1:{unused_port}")
     with pytest.raises(ModelError, match="nicht erreichbar"):
         provider.generate(ModelRequest(messages=[], timeout_seconds=1))
-    with OllamaTestServer({"model": "test", "message": {"content": "Antwort"}}) as server:
+    with OllamaTestServer({"model": "test", "message": {"content": "Antwort"}, "done": True}) as server:
         response = OllamaProvider("test", base_url=server.url).generate(ModelRequest(messages=[]))
         assert response.prompt_tokens is None
         assert response.output_tokens is None
         assert response.duration_seconds is None
+
+
+def test_unvollstaendige_ollama_antwort_wird_abgelehnt():
+    with OllamaTestServer({"model": "test", "message": {"content": "Teilantwort"},
+                           "done": False}) as server:
+        with pytest.raises(InvalidModelResponse):
+            OllamaProvider("test", base_url=server.url).generate(ModelRequest(messages=[]))

@@ -16,7 +16,22 @@ Neu: `src/storyforge/providers.py`, `src/storyforge/dialogue.py`, `tests/test_pr
 
 ## Automatisierte Tests
 
-`.venv/bin/python -m pytest -q`: **24 bestanden**. Die bisherigen neun SF-001-Tests bleiben erfolgreich. Die neuen Tests nutzen Fake-Antworten und einen lokalen HTTP-Testserver; sie benötigen weder Ollama noch GPU, API-Schlüssel oder Internetzugriff auf ein Modell. Geprüft werden Dialog und Neustart, Kontextisolation, Manifest, Modellwechsel, Entwurf ohne Freigabe, Abbruch, Timeout, Offline-Fall, ungültige und veraltete Vorschläge, Schutz bestehender Elemente, Ollama-Payload und optionale Metriken. **Ein echtes Ollama-Modell wurde in diesem Auftrag nicht ausgeführt.** Der CI-Workflow führt dieselbe Suite nach einem späteren Push unter Linux und Windows aus; es erfolgt hier kein Push.
+`.venv/bin/python -m pytest -q`: **30 bestanden**. Die bisherigen neun SF-001-Tests bleiben erfolgreich. Die Tests nutzen Fake-Antworten und einen lokalen HTTP-Testserver; sie benötigen weder Ollama noch GPU, API-Schlüssel oder Internetzugriff auf ein Modell. Die Abschlussprüfung ergänzte einen vollständigen Prozessneustart des Dialogs, den 1:1-Abgleich von Manifest und gesendetem Kontext, Abbruch nach der Modellantwort, Konkurrenz während des Modellaufrufs, Ablehnung eines fremden Variantenschlüssels, unverändertes DB-Schema beim Modellwechsel und die Prüfung der Modellfähigkeiten. **Ein echtes Ollama-Modell wurde nicht ausgeführt:** Auf der Prüfmaschine ist kein `ollama`-Programm installiert. Simulierte HTTP-Antworten sind keine realen Modelltests. Der Linux- und Windows-CI-Lauf für den veröffentlichten Stand wird nach dem Push geprüft.
+
+## Abschlussprüfung der zehn Akzeptanzkriterien
+
+1. Fake-Provider mit vollständigem Projektgespräch: erfüllt; zwei Gesprächsrunden mit gespeichertem Verlauf und erneutem Laden.
+2. Ollama frei und strukturiert: HTTP-Vertrag für beide Modi am lokalen Testserver geprüft; realer Modelllauf offen.
+3. Modellwechsel ohne Datenbankänderung: erfüllt; anderer Fake-Modellname bei identischem SQLite-Schema.
+4. Kontextmanifest: erfüllt; Projekt-, Werk-, Universums-, Varianten-, Revisions-, Ideen-, Entscheidungs- und Verlauf-IDs mit der tatsächlich gesendeten Nachricht verglichen.
+5. Isolation: erfüllt; fremdes Projekt und nicht gewählte Variante fehlen im Modellkontext; ein fremder Variantenschlüssel wird vor dem Provideraufruf abgelehnt.
+6. Unverbindliche KI-Vorschläge: erfüllt; ohne `Memory.approve` bleibt der Revisionskopf unverändert. Freier Dialog erzeugt keinen Vorschlag.
+7. Ungültig, abgebrochen, veraltet: erfüllt; keine verbindliche Änderung bei fehlerhafter oder unvollständiger Antwort, Offline-Fall, Timeout und Abbruch. Eine Änderung während des Modellaufrufs macht den Vorschlag veraltet.
+8. Kreativer Dialog ohne Modelländerung: erfüllt; Gesprächsbeiträge werden getrennt von Revisionen gespeichert.
+9. SF-001-Regression: erfüllt; alle neun bisherigen Tests bestehen.
+10. Automatisierte Tests: erfüllt; 30 pytest-Tests, einschließlich lokaler Ollama-HTTP-Simulation. Windows-CI-Ergebnis folgt nach Veröffentlichung.
+
+Die Kontextgrenze zählt Zeichen der gesendeten Nachrichteninhalte, nicht modellabhängige Token. Sämtliche bestätigten Entscheidungen bleiben im Systemkontext; falls dieser zu groß ist, erfolgt kein Modellaufruf. Der Standard-Ollama-Adapter akzeptiert nur Loopback-Adressen; eine nicht lokale Adresse verlangt ausdrücklich `allow_remote=True`. Es gibt keine Telemetrie.
 
 ## Optionaler manueller Ollama-Smoke-Test unter Windows
 
@@ -49,4 +64,4 @@ Der Test erzeugt nur synthetische lokale Daten in `local/` (gitignored) und lös
 
 - Ollama-Modellqualität, tatsächliche Windows-Laufzeit und Tokenlimits lassen sich erst mit einem ausgewählten lokalen Modell manuell beurteilen. Die automatisierten HTTP-Vertragstests belegen den Adapter, keinen realen Modelllauf.
 - Abbruch während eines laufenden HTTP-Aufrufs schließt die Verbindung und beendet den Dialog sofort; ein bereits gestarteter Serveraufruf kann noch kurz nachlaufen. Dabei erfolgt keine Kanonänderung.
-- Für SF-003 die geplanten kreativen Verfahren auf `Dialogue` und unverbindliche Entwürfe aufsetzen und erst dann geeignete Wissenskarten bereitstellen. Modellantworten redaktionell prüfen; eine Autorfreigabe bleibt explizit.
+- Für SF-003 reicht der Provider-Vertrag mit freien Nachrichten und frei wählbarem JSON-Schema als technische Basis. Der aktuelle `Dialogue`-Pfad validiert strukturierte Änderungen bewusst nur als Ideen-Snapshot. Geheimnishypothesen, Kritik und mehrere Kandidaten benötigen in SF-003 eigene geprüfte Ergebnisverträge und Kontextauswahl; sie wurden hier nicht vorweggenommen. Modellantworten redaktionell prüfen; eine Autorfreigabe bleibt explizit.
