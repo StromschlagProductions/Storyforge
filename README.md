@@ -4,7 +4,7 @@ Deutschsprachige KI-gestützte Hörspiel-Autorenwerkstatt von Stromschlag Audio.
 
 Einstieg: [Masterplan](docs/MASTERPLAN.md), [P0-Auftragsplan](docs/tasks/P0_Auftragsplan.md), [Technische Architektur](docs/research/08_Technische_Architektur.md), [Arbeitsregeln](AGENTS.md).
 
-Status: SF-001 als lokaler Python-Kern implementiert; noch keine Oberfläche oder KI-Anbindung. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
+Status: SF-001 und SF-002 als lokaler Python-Kern implementiert; noch keine Oberfläche. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
 
 ## Lokal starten
 
@@ -36,3 +36,7 @@ print(spaeter.get_project(projekt_id))
 ```
 
 Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert einen Entwurf, ohne den Stand zu ändern. `approve(proposal_id, approved_by="...", explicit_approval=True)` übernimmt ihn nur bei ausdrücklicher Freigabe und aktueller Ausgangsrevision. `create_branch` eröffnet eine isolierte Variante; `restore` erstellt einen freizugebenden Wiederherstellungsentwurf. `export_file(project_id, pfad, format="json")` und `format="markdown"` schreiben atomare Dateien. Siehe [SF-001-Bericht](docs/tasks/SF-001_Ergebnis.md) für Datenverträge und Grenzen.
+
+## Kreativer Dialog (SF-002)
+
+`Dialogue` verbindet ein ausgewähltes Projekt und eine Variante mit einem `FakeProvider` oder dem lokalen `OllamaProvider`. Freie Antworten bleiben Gespräch; strukturierte Antworten werden als unverbindliche Entwürfe gespeichert. Nur ein ausdrücklicher Aufruf von `Memory.approve` verändert den Revisionskopf. Beispiel und optionaler Windows-Smoke-Test: [SF-002-Bericht](docs/tasks/SF-002_Ergebnis.md).

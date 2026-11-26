@@ -49,7 +49,7 @@ class Memory:
     def _migrate(self):
         with self._connection() as db:
             version = db.execute("PRAGMA user_version").fetchone()[0]
-            if version > 1:
+            if version > 2:
                 raise RuntimeError(f"Unbekannte Datenbankversion: {version}")
             if version == 0:
                 db.executescript("""
@@ -87,6 +87,27 @@ class Memory:
                         PRAGMA user_version = 1;
                         COMMIT;
                     """)
+                version = 1
+            if version == 1:
+                db.executescript("""
+                    BEGIN IMMEDIATE;
+                    CREATE TABLE conversation_turns (
+                        id TEXT PRIMARY KEY,
+                        project_id TEXT NOT NULL REFERENCES projects(id),
+                        branch_id TEXT NOT NULL REFERENCES branches(id),
+                        revision_id TEXT NOT NULL REFERENCES revisions(id),
+                        role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
+                        content TEXT NOT NULL,
+                        created_at TEXT NOT NULL,
+                        manifest TEXT,
+                        model TEXT,
+                        proposal_id TEXT REFERENCES proposals(id)
+                    );
+                    CREATE INDEX conversation_turns_context
+                        ON conversation_turns(project_id, branch_id, created_at);
+                    PRAGMA user_version = 2;
+                    COMMIT;
+                """)
 
     def create_project(self, title: str, *, work_title: str | None = None,
                        universe_title: str | None = None, universe_id: UUID | None = None) -> Project:
@@ -176,6 +197,34 @@ class Memory:
         if row is None:
             raise NotFoundError(proposal_id)
         return Proposal.model_validate({**dict(row), "snapshot": json.loads(row["snapshot"])})
+
+    def list_turns(self, project_id: UUID, branch_id: UUID, *, limit: int = 20) -> list[dict]:
+        if limit < 0:
+            raise ValueError("Limit darf nicht negativ sein")
+        with self._connection() as db:
+            rows = db.execute("""SELECT * FROM (
+                SELECT rowid AS sequence, * FROM conversation_turns WHERE project_id=? AND branch_id=?
+                ORDER BY sequence DESC LIMIT ?
+            ) ORDER BY sequence""", (str(project_id), str(branch_id), limit)).fetchall()
+        return [dict(row) for row in rows]
+
+    def save_exchange(self, project_id: UUID, branch_id: UUID, revision_id: UUID,
+                      user_text: str, answer: str, manifest: dict, model: str,
+                      proposal_id: UUID | None = None) -> tuple[UUID, UUID]:
+        """Speichert beide Gesprächsbeiträge zusammen, getrennt von Revisionen."""
+        user_id, assistant_id = uuid4(), uuid4()
+        stamp = datetime.now(timezone.utc).isoformat()
+        with self._connection() as db, db:
+            db.execute("""INSERT INTO conversation_turns
+                (id, project_id, branch_id, revision_id, role, content, created_at)
+                VALUES (?, ?, ?, ?, 'user', ?, ?)""",
+                (str(user_id), str(project_id), str(branch_id), str(revision_id), user_text, stamp))
+            db.execute("""INSERT INTO conversation_turns
+                (id, project_id, branch_id, revision_id, role, content, created_at, manifest, model, proposal_id)
+                VALUES (?, ?, ?, ?, 'assistant', ?, ?, ?, ?, ?)""",
+                (str(assistant_id), str(project_id), str(branch_id), str(revision_id), answer, stamp,
+                 json.dumps(manifest, ensure_ascii=False), model, str(proposal_id) if proposal_id else None))
+        return user_id, assistant_id
 
     def reject(self, proposal_id: UUID):
         with self._connection() as db, db:

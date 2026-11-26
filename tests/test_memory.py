@@ -30,7 +30,7 @@ def test_neustart_ohne_skript_und_eindeutige_werke(tmp_path):
     assert first.work_id != second.work_id
     assert reopened.get_revision(reopened.list_branches(first.id)[0].head_id).snapshot.ideas == []
     with sqlite3.connect(path) as db:
-        assert db.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert db.execute("PRAGMA user_version").fetchone()[0] == 2
         assert db.execute("PRAGMA foreign_key_check").fetchall() == []
 
 
