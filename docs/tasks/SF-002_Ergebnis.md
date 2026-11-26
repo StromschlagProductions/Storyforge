@@ -16,7 +16,7 @@ Neu: `src/storyforge/providers.py`, `src/storyforge/dialogue.py`, `tests/test_pr
 
 ## Automatisierte Tests
 
-`.venv/bin/python -m pytest -q`: **30 bestanden**. Die bisherigen neun SF-001-Tests bleiben erfolgreich. Die Tests nutzen Fake-Antworten und einen lokalen HTTP-Testserver; sie benötigen weder Ollama noch GPU, API-Schlüssel oder Internetzugriff auf ein Modell. Die Abschlussprüfung ergänzte einen vollständigen Prozessneustart des Dialogs, den 1:1-Abgleich von Manifest und gesendetem Kontext, Abbruch nach der Modellantwort, Konkurrenz während des Modellaufrufs, Ablehnung eines fremden Variantenschlüssels, unverändertes DB-Schema beim Modellwechsel und die Prüfung der Modellfähigkeiten. **Ein echtes Ollama-Modell wurde nicht ausgeführt:** Auf der Prüfmaschine ist kein `ollama`-Programm installiert. Simulierte HTTP-Antworten sind keine realen Modelltests. Der Linux- und Windows-CI-Lauf für den veröffentlichten Stand wird nach dem Push geprüft.
+`.venv/bin/python -m pytest -q`: **30 bestanden**. Die bisherigen neun SF-001-Tests bleiben erfolgreich. Die Tests nutzen Fake-Antworten und einen lokalen HTTP-Testserver; sie benötigen weder Ollama noch GPU, API-Schlüssel oder Internetzugriff auf ein Modell. Die Abschlussprüfung ergänzte einen vollständigen Prozessneustart des Dialogs, den 1:1-Abgleich von Manifest und gesendetem Kontext, Abbruch nach der Modellantwort, Konkurrenz während des Modellaufrufs, Ablehnung eines fremden Variantenschlüssels, unverändertes DB-Schema beim Modellwechsel und die Prüfung der Modellfähigkeiten. **Ein echtes Ollama-Modell wurde nicht ausgeführt:** Auf der Prüfmaschine ist kein `ollama`-Programm installiert. Simulierte HTTP-Antworten sind keine realen Modelltests. Der [korrigierte CI-Lauf](https://github.com/StromschlagProductions/Storyforge/actions/runs/45889467025) bestand unter Linux und Windows. Ein erster Windows-Lauf scheiterte an einer zu engen Testannahme für einen geschlossenen lokalen Port: Windows meldete Timeout statt Verbindungsablehnung. Der Test akzeptiert jetzt beide sicheren Fehlerarten.
 
 ## Abschlussprüfung der zehn Akzeptanzkriterien
 
@@ -29,7 +29,7 @@ Neu: `src/storyforge/providers.py`, `src/storyforge/dialogue.py`, `tests/test_pr
 7. Ungültig, abgebrochen, veraltet: erfüllt; keine verbindliche Änderung bei fehlerhafter oder unvollständiger Antwort, Offline-Fall, Timeout und Abbruch. Eine Änderung während des Modellaufrufs macht den Vorschlag veraltet.
 8. Kreativer Dialog ohne Modelländerung: erfüllt; Gesprächsbeiträge werden getrennt von Revisionen gespeichert.
 9. SF-001-Regression: erfüllt; alle neun bisherigen Tests bestehen.
-10. Automatisierte Tests: erfüllt; 30 pytest-Tests, einschließlich lokaler Ollama-HTTP-Simulation. Windows-CI-Ergebnis folgt nach Veröffentlichung.
+10. Automatisierte Tests: erfüllt; 30 pytest-Tests, einschließlich lokaler Ollama-HTTP-Simulation. Linux- und Windows-CI des korrigierten Stands erfolgreich.
 
 Die Kontextgrenze zählt Zeichen der gesendeten Nachrichteninhalte, nicht modellabhängige Token. Sämtliche bestätigten Entscheidungen bleiben im Systemkontext; falls dieser zu groß ist, erfolgt kein Modellaufruf. Der Standard-Ollama-Adapter akzeptiert nur Loopback-Adressen; eine nicht lokale Adresse verlangt ausdrücklich `allow_remote=True`. Es gibt keine Telemetrie.
 
