@@ -49,7 +49,7 @@ class Memory:
     def _migrate(self):
         with self._connection() as db:
             version = db.execute("PRAGMA user_version").fetchone()[0]
-            if version > 2:
+            if version > 3:
                 raise RuntimeError(f"Unbekannte Datenbankversion: {version}")
             if version == 0:
                 db.executescript("""
@@ -106,6 +106,26 @@ class Memory:
                     CREATE INDEX conversation_turns_context
                         ON conversation_turns(project_id, branch_id, created_at);
                     PRAGMA user_version = 2;
+                    COMMIT;
+                """)
+                version = 2
+            if version == 2:
+                db.executescript("""
+                    BEGIN IMMEDIATE;
+                    CREATE TABLE creative_runs (
+                        id TEXT PRIMARY KEY,
+                        project_id TEXT NOT NULL REFERENCES projects(id),
+                        branch_id TEXT NOT NULL REFERENCES branches(id),
+                        revision_id TEXT NOT NULL REFERENCES revisions(id),
+                        created_at TEXT NOT NULL,
+                        model TEXT NOT NULL,
+                        task TEXT NOT NULL,
+                        manifest TEXT NOT NULL,
+                        candidates TEXT NOT NULL,
+                        reflection TEXT,
+                        metrics TEXT NOT NULL
+                    );
+                    PRAGMA user_version = 3;
                     COMMIT;
                 """)
 
@@ -225,6 +245,31 @@ class Memory:
                 (str(assistant_id), str(project_id), str(branch_id), str(revision_id), answer, stamp,
                  json.dumps(manifest, ensure_ascii=False), model, str(proposal_id) if proposal_id else None))
         return user_id, assistant_id
+
+    def save_creative_run(self, project_id: UUID, branch_id: UUID, revision_id: UUID,
+                          model: str, task: str, manifest: dict, candidates: list[dict],
+                          reflection: dict | None = None, metrics: dict | None = None) -> UUID:
+        """Speichert ein unverbindliches Ergebnis getrennt von Revisionen."""
+        run_id = uuid4()
+        with self._connection() as db, db:
+            db.execute("""INSERT INTO creative_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                       (str(run_id), str(project_id), str(branch_id), str(revision_id),
+                        datetime.now(timezone.utc).isoformat(), model, task,
+                        json.dumps(manifest, ensure_ascii=False),
+                        json.dumps(candidates, ensure_ascii=False),
+                        json.dumps(reflection, ensure_ascii=False) if reflection is not None else None,
+                        json.dumps(metrics or {}, ensure_ascii=False)))
+        return run_id
+
+    def get_creative_run(self, run_id: UUID) -> dict:
+        with self._connection() as db:
+            row = db.execute("SELECT * FROM creative_runs WHERE id=?", (str(run_id),)).fetchone()
+        if row is None:
+            raise NotFoundError(run_id)
+        result = dict(row)
+        for field in ("manifest", "candidates", "reflection", "metrics"):
+            result[field] = json.loads(result[field]) if result[field] is not None else None
+        return result
 
     def reject(self, proposal_id: UUID):
         with self._connection() as db, db:

@@ -168,6 +168,7 @@ def test_migration_von_sf001_schema(tmp_path):
     project = memory.create_project("Altes Projekt")
     with sqlite3.connect(path) as db:
         db.execute("DROP TABLE conversation_turns")
+        db.execute("DROP TABLE creative_runs")
         db.execute("PRAGMA user_version = 1")
     reopened = Memory(path)
     assert reopened.get_project(project.id) == project

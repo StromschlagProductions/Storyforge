@@ -49,11 +49,14 @@ class Dialogue:
         self.timeout_seconds = timeout_seconds
 
     def ask(self, project_id: UUID, branch_id: UUID, task: str, *, structured: bool = False,
-            cards: CardSelection | None = None,
+            cards: CardSelection | None = None, format_schema: dict | None = None,
+            persist: bool = True,
             cancel: threading.Event | None = None) -> DialogueResult:
         if not task.strip():
             raise ValueError("Aufgabenstellung fehlt")
-        if structured and "structured" not in self.provider.capabilities:
+        if structured and (format_schema is not None or not persist):
+            raise ValueError("Änderungsentwürfe benötigen die feste Schema- und Speicherprüfung")
+        if (structured or format_schema is not None) and "structured" not in self.provider.capabilities:
             raise ValueError("Modell unterstützt keine strukturierten Antworten")
         project = self.memory.get_project(project_id)
         branch = next((item for item in self.memory.list_branches(project_id) if item.id == branch_id), None)
@@ -107,7 +110,7 @@ class Dialogue:
         messages.append({"role": "user", "content": task})
         response: ModelResponse = self.provider.generate(
             ModelRequest(messages=messages,
-                         format_schema=ProposedChange.model_json_schema() if structured else None,
+                         format_schema=ProposedChange.model_json_schema() if structured else format_schema,
                          timeout_seconds=self.timeout_seconds), cancel)
         if cancel is not None and cancel.is_set():
             raise ModelCancelled("Anfrage abgebrochen")
@@ -137,8 +140,9 @@ class Dialogue:
                 raise
             except ValueError as error:
                 raise InvalidModelResponse("Ungültiger Änderungsvorschlag") from error
-        self.memory.save_exchange(project_id, branch_id, revision.id, task, response.content,
-                                  manifest, response.model, proposal_id)
+        if persist:
+            self.memory.save_exchange(project_id, branch_id, revision.id, task, response.content,
+                                      manifest, response.model, proposal_id)
         return DialogueResult(answer=response.content, model=response.model, manifest=manifest,
                               proposal_id=proposal_id, duration_seconds=response.duration_seconds,
                               prompt_tokens=response.prompt_tokens, output_tokens=response.output_tokens)

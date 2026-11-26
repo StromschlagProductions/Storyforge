@@ -4,7 +4,7 @@ Deutschsprachige KI-gestützte Hörspiel-Autorenwerkstatt von Stromschlag Audio.
 
 Einstieg: [Masterplan](docs/MASTERPLAN.md), [P0-Auftragsplan](docs/tasks/P0_Auftragsplan.md), [Technische Architektur](docs/research/08_Technische_Architektur.md), [Arbeitsregeln](AGENTS.md).
 
-Status: SF-001, SF-002 und die technische Wissenskarten-Grundlage SF-003A als lokaler Python-Kern implementiert; noch keine Oberfläche. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
+Status: SF-001, SF-002, die Narrative Library SF-003A und die Stoffschmiede SF-003B als lokaler Python-Kern implementiert; noch keine Oberfläche. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
 
 ## Lokal starten
 
@@ -44,3 +44,7 @@ Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert
 ## Narrative Library (SF-003A)
 
 `NarrativeLibrary.load(verzeichnis)` liest versionierte Wissenskarten aus einzelnen JSON-Dateien. `select(aufgabenart, categories={...}, keywords={...}, limit=...)` liefert eine begründete, begrenzte Auswahl. Nur bei `Dialogue.ask(..., cards=auswahl)` gelangen deren Inhalte in den Modellkontext. Die vier Dateien unter `examples/synthetic_cards/` sind ausschließlich synthetische Testbeispiele. Datenvertrag und Nutzung: [SF-003A-Bericht](docs/tasks/SF-003A_Ergebnis.md).
+
+## Stoffschmiede (SF-003B)
+
+`Stoffschmiede(memory, provider, NarrativeLibrary.load("library/cards"))` entwickelt zwei bis fünf unverbindliche Stoffkeime. Die redaktionell bereitgestellten Karten bleiben unter `library/cards/` getrennt von synthetischen Beispielen. Ergebnisvertrag, Freigabeweg und optionaler Windows-Ollama-Test: [SF-003B-Bericht](docs/tasks/SF-003B_Ergebnis.md).
