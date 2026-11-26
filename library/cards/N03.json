@@ -1,0 +1,36 @@
+{
+  "id": "N03",
+  "version": 1,
+  "category": "N",
+  "name": "Historische Spurensuche",
+  "principle": "Vergangene Quellen erschließen ein gegenwärtiges Rätsel.",
+  "creative_instruction": "Entwirf Quellen unterschiedlicher Zuverlässigkeit und eine überprüfbare Verbindung zur Gegenwart.",
+  "applications": [
+    "geschichte",
+    "archäologie",
+    "mystery"
+  ],
+  "quality_questions": [
+    "Sind Lücken und Widersprüche begründet?"
+  ],
+  "weaknesses": [
+    "Historische Exposition ohne Handlung."
+  ],
+  "audio_relevance": "Archivstimmen und zeittypische Klänge unterscheiden Ebenen.",
+  "related_ids": [
+    "M05",
+    "M13"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "geschichte",
+    "archäologie",
+    "mystery"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

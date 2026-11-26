@@ -1,0 +1,36 @@
+{
+  "id": "M15",
+  "version": 1,
+  "category": "M",
+  "name": "Unbeabsichtigte Konsequenz",
+  "principle": "Eine nachvollziehbare Entscheidung erzeugt unbeabsichtigten Schaden.",
+  "creative_instruction": "Leite aus einer zunächst sinnvollen Entscheidung eine Kette unerwarteter Folgen ab.",
+  "applications": [
+    "schuld",
+    "kausalität",
+    "figuren"
+  ],
+  "quality_questions": [
+    "Sind Folgen und Entscheidung kausal verbunden?"
+  ],
+  "weaknesses": [
+    "Zufälliges Unglück als angebliche Schuld."
+  ],
+  "audio_relevance": "Frühere Entscheidungen hallen in späteren Szenen nach.",
+  "related_ids": [
+    "D07",
+    "M12"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "schuld",
+    "kausalität",
+    "figuren"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

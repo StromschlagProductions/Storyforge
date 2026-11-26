@@ -1,0 +1,37 @@
+{
+  "id": "A10",
+  "version": 1,
+  "category": "A",
+  "name": "Klangliche Ellipse",
+  "principle": "Ein ausgespartes Ereignis wird durch seine akustischen Folgen erschließbar.",
+  "creative_instruction": "Plane vorherigen Zustand, Auslassung und hörbare Folgen mit ausreichenden Ankern.",
+  "applications": [
+    "klang",
+    "dramaturgie",
+    "handlung"
+  ],
+  "quality_questions": [
+    "Kann das Publikum die notwendige Schlussfolgerung ziehen?"
+  ],
+  "weaknesses": [
+    "Wichtige Handlung bleibt unverständlich."
+  ],
+  "audio_relevance": "Klangfolge ersetzt unnötigen Erklärdialog.",
+  "related_ids": [
+    "D07",
+    "D14"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "dramaturgie",
+    "handlung"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

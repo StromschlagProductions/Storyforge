@@ -1,0 +1,36 @@
+{
+  "id": "N16",
+  "version": 1,
+  "category": "N",
+  "name": "Technischer Kontrollverlust",
+  "principle": "Ein vertrautes System reagiert zunehmend unerwartet.",
+  "creative_instruction": "Etabliere die normale Funktion, leite Abweichungen und Konsequenzen ab.",
+  "applications": [
+    "technik",
+    "science-fiction",
+    "thriller"
+  ],
+  "quality_questions": [
+    "Sind technische Regeln konsistent?"
+  ],
+  "weaknesses": [
+    "Technik als beliebiges Zaubermittel."
+  ],
+  "audio_relevance": "Bediengeräusche und Rückmeldungen zeigen Kontrollverlust.",
+  "related_ids": [
+    "M07",
+    "D11"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "technik",
+    "science-fiction",
+    "thriller"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

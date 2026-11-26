@@ -1,0 +1,36 @@
+{
+  "id": "D17",
+  "version": 1,
+  "category": "D",
+  "name": "Offene Frage hinterlassen",
+  "principle": "Bewusste Unvollständigkeit erzeugt Nachwirkung oder Fortsetzungspotenzial.",
+  "creative_instruction": "Bestimme, welche Frage offen bleibt und welche dennoch beantwortet werden muss.",
+  "applications": [
+    "saga",
+    "mystery",
+    "mehrdeutigkeit"
+  ],
+  "quality_questions": [
+    "Ist die Offenheit absichtlich und vorbereitet?"
+  ],
+  "weaknesses": [
+    "Unfertige Auflösung als Mehrdeutigkeit tarnen."
+  ],
+  "audio_relevance": "Ein letzter akustischer Widerspruch kann Nachwirkung erzeugen.",
+  "related_ids": [
+    "N12",
+    "M10"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "saga",
+    "mystery",
+    "mehrdeutigkeit"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

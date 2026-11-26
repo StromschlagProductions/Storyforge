@@ -1,0 +1,36 @@
+{
+  "id": "D04",
+  "version": 1,
+  "category": "D",
+  "name": "Ziel etablieren",
+  "principle": "Ein konkretes Ziel richtet die Handlung aus.",
+  "creative_instruction": "Formuliere Ziel, Motivation und erkennbare Erfolgskriterien aus Figurensicht.",
+  "applications": [
+    "figuren",
+    "dramaturgie",
+    "ziel"
+  ],
+  "quality_questions": [
+    "Ist das Ziel im aktuellen Wissen begründet?"
+  ],
+  "weaknesses": [
+    "Ziel nur als Autorenbehauptung."
+  ],
+  "audio_relevance": "Handlungen und Entscheidungen vermitteln Absicht.",
+  "related_ids": [
+    "D05",
+    "D06"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "figuren",
+    "dramaturgie",
+    "ziel"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

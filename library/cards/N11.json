@@ -1,0 +1,36 @@
+{
+  "id": "N11",
+  "version": 1,
+  "category": "N",
+  "name": "Dezentrale Entdeckung",
+  "principle": "Mehrere Figurengruppen erschließen unterschiedliche Teile der Welt.",
+  "creative_instruction": "Verteile Erkenntnisse auf eigenständige Handlungsstränge und plane ihre Schnittpunkte.",
+  "applications": [
+    "ensemble",
+    "saga",
+    "mystery"
+  ],
+  "quality_questions": [
+    "Hat jeder Strang ein eigenes Ziel?"
+  ],
+  "weaknesses": [
+    "Zu viele ununterscheidbare Gruppen."
+  ],
+  "audio_relevance": "Stimmen und Klangräume markieren Wechsel.",
+  "related_ids": [
+    "M13",
+    "N04"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "ensemble",
+    "saga",
+    "mystery"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

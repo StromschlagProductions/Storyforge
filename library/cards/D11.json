@@ -1,0 +1,36 @@
+{
+  "id": "D11",
+  "version": 1,
+  "category": "D",
+  "name": "Handlungsmöglichkeiten reduzieren",
+  "principle": "Bedrohung schließt schrittweise plausible Auswege.",
+  "creative_instruction": "Liste verfügbare Optionen und leite ihren Verlust kausal ab.",
+  "applications": [
+    "spannung",
+    "horror",
+    "handlung"
+  ],
+  "quality_questions": [
+    "Bleiben Entscheidungen bedeutsam?"
+  ],
+  "weaknesses": [
+    "Künstlich inkompetente Figuren."
+  ],
+  "audio_relevance": "Ausfall vertrauter Kommunikation vermittelt Isolation.",
+  "related_ids": [
+    "N07",
+    "D12"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "spannung",
+    "horror",
+    "handlung"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

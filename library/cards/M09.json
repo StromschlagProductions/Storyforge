@@ -1,0 +1,36 @@
+{
+  "id": "M09",
+  "version": 1,
+  "category": "M",
+  "name": "Abwesenheit als Beweis",
+  "principle": "Etwas Erwartbares fehlt und macht eine Erklärung fragwürdig.",
+  "creative_instruction": "Etabliere eine Erwartung und leite aus ihrem Ausbleiben mehrere Hypothesen ab.",
+  "applications": [
+    "hinweise",
+    "mystery",
+    "klang"
+  ],
+  "quality_questions": [
+    "Kennt das Publikum die normale Erwartung?"
+  ],
+  "weaknesses": [
+    "Ein nie etabliertes Detail soll entscheidend sein."
+  ],
+  "audio_relevance": "Das Ausbleiben eines vertrauten Klangs wird zum Hinweis.",
+  "related_ids": [
+    "A03",
+    "D02"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "hinweise",
+    "mystery",
+    "klang"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

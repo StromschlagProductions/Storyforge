@@ -1,0 +1,36 @@
+{
+  "id": "D02",
+  "version": 1,
+  "category": "D",
+  "name": "Erwartung aufbauen",
+  "principle": "Eine erkennbare Erwartung ermöglicht Spannung und Umdeutung.",
+  "creative_instruction": "Etabliere eine Erwartung und plane ihre Erfüllung oder begründete Verletzung.",
+  "applications": [
+    "dramaturgie",
+    "spannung",
+    "hinweise"
+  ],
+  "quality_questions": [
+    "Ist die Erwartung verständlich?"
+  ],
+  "weaknesses": [
+    "Überdeutliche Vorausdeutung."
+  ],
+  "audio_relevance": "Wiederholung etabliert akustische Muster.",
+  "related_ids": [
+    "M09",
+    "D10"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "dramaturgie",
+    "spannung",
+    "hinweise"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "N14",
+  "version": 1,
+  "category": "N",
+  "name": "Unzuverlässige Identität",
+  "principle": "Vertraute Identitätsmerkmale sind nicht länger zuverlässig.",
+  "creative_instruction": "Entwickle konkurrierende Identitätshinweise und faire Grenzen ihrer Überprüfbarkeit.",
+  "applications": [
+    "identität",
+    "horror",
+    "psychothriller"
+  ],
+  "quality_questions": [
+    "Hat die Unsicherheit Folgen für Beziehungen?"
+  ],
+  "weaknesses": [
+    "Beliebige Doppelgängerwendung."
+  ],
+  "audio_relevance": "Vertraute Stimmen können in unpassenden Kontexten auftreten.",
+  "related_ids": [
+    "M04",
+    "A09"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "identität",
+    "horror",
+    "psychothriller"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

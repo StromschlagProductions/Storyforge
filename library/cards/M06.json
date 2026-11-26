@@ -1,0 +1,36 @@
+{
+  "id": "M06",
+  "version": 1,
+  "category": "M",
+  "name": "Verborgene Gesetzmäßigkeit",
+  "principle": "Eine unbekannte Regel verbindet scheinbar unmögliche Beobachtungen.",
+  "creative_instruction": "Formuliere eine fiktionale Regel mit Grenzen, Gegenbeispiel und drei Konsequenzen.",
+  "applications": [
+    "wissenschaft",
+    "mystery",
+    "science-fiction"
+  ],
+  "quality_questions": [
+    "Welche Beobachtung könnte die Regel widerlegen?"
+  ],
+  "weaknesses": [
+    "Regeländerung zur Rettung des Finales."
+  ],
+  "audio_relevance": "Wiederholbare hörbare Muster erlauben eigene Schlüsse.",
+  "related_ids": [
+    "N01",
+    "D08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "mystery",
+    "science-fiction"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

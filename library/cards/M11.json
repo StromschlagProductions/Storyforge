@@ -1,0 +1,36 @@
+{
+  "id": "M11",
+  "version": 1,
+  "category": "M",
+  "name": "Kategorienfehler",
+  "principle": "Das Phänomen wird der falschen Klasse zugeordnet.",
+  "creative_instruction": "Entwickle eine plausible anfängliche Kategorie und eine andere, die mehr Befunde erklärt.",
+  "applications": [
+    "wissenschaft",
+    "mystery",
+    "irrtum"
+  ],
+  "quality_questions": [
+    "Warum war die erste Klassifikation plausibel?"
+  ],
+  "weaknesses": [
+    "Bloße Umbenennung ohne Folgen."
+  ],
+  "audio_relevance": "Ein Geräusch wird einer falschen Quelle zugeordnet.",
+  "related_ids": [
+    "A01",
+    "M02"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "mystery",
+    "irrtum"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

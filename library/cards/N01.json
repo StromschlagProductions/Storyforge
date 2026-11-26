@@ -1,0 +1,36 @@
+{
+  "id": "N01",
+  "version": 1,
+  "category": "N",
+  "name": "Intellektuelle Expedition",
+  "principle": "Eine Untersuchung überschreitet die Grenzen des bisherigen Weltbilds.",
+  "creative_instruction": "Beginne mit einem konkreten Fachproblem, entwickle Anomalie, Prüfung und Konsequenz.",
+  "applications": [
+    "wissenschaft",
+    "abenteuer",
+    "archäologie"
+  ],
+  "quality_questions": [
+    "Ergibt sich die Entdeckung aus der Untersuchung?"
+  ],
+  "weaknesses": [
+    "Fachjargon ersetzt Erkenntnis."
+  ],
+  "audio_relevance": "Experimente und Reaktionen vermitteln den Erkenntnisfortschritt.",
+  "related_ids": [
+    "M06",
+    "N02"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "abenteuer",
+    "archäologie"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

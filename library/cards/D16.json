@@ -1,0 +1,36 @@
+{
+  "id": "D16",
+  "version": 1,
+  "category": "D",
+  "name": "Neuen Zustand etablieren",
+  "principle": "Der Abschluss zeigt, was sich dauerhaft verändert hat.",
+  "creative_instruction": "Kontrastiere den Endzustand mit dem Anfang auf relevanten Ebenen.",
+  "applications": [
+    "finale",
+    "figuren",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Ist der Wandel wahrnehmbar?"
+  ],
+  "weaknesses": [
+    "Epilog erklärt nur Bekanntes."
+  ],
+  "audio_relevance": "Veränderte Routine oder Klangmotiv zeigt Wandel.",
+  "related_ids": [
+    "D01",
+    "A08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "finale",
+    "figuren",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

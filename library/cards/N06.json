@@ -1,0 +1,36 @@
+{
+  "id": "N06",
+  "version": 1,
+  "category": "N",
+  "name": "Soziale Druckkammer",
+  "principle": "Eine Bedrohung verschärft bereits vorhandene soziale Konflikte.",
+  "creative_instruction": "Entwickle Beziehungen vor der Krise und verändere ihre Handlungsspielräume unter Druck.",
+  "applications": [
+    "horror",
+    "psychothriller",
+    "ensemble"
+  ],
+  "quality_questions": [
+    "Reagieren Figuren individuell statt als homogene Gruppe?"
+  ],
+  "weaknesses": [
+    "Konflikt nur durch grundlose Aggression."
+  ],
+  "audio_relevance": "Ensemblegespräche zeigen wechselnde Allianzen.",
+  "related_ids": [
+    "D12",
+    "N13"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "psychothriller",
+    "ensemble"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

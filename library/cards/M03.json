@@ -1,0 +1,36 @@
+{
+  "id": "M03",
+  "version": 1,
+  "category": "M",
+  "name": "Falscher Maßstab",
+  "principle": "Ein lokales Ereignis ist Ausdruck eines größeren oder kleineren Zusammenhangs.",
+  "creative_instruction": "Variiere die Reichweite der Ursache und leite konkrete Folgen ab.",
+  "applications": [
+    "mystery",
+    "maßstab",
+    "science-fiction"
+  ],
+  "quality_questions": [
+    "Verändert der Maßstab die Bedeutung statt nur die Größe?"
+  ],
+  "weaknesses": [
+    "Beliebige Eskalation."
+  ],
+  "audio_relevance": "Ähnliche Meldungen aus verschiedenen Orten vermitteln Ausdehnung.",
+  "related_ids": [
+    "N12",
+    "M06"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "maßstab",
+    "science-fiction"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

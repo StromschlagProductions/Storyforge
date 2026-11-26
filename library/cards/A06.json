@@ -1,0 +1,37 @@
+{
+  "id": "A06",
+  "version": 1,
+  "category": "A",
+  "name": "Unzuverlässige Hörperspektive",
+  "principle": "Die vermittelte Wahrnehmung entspricht nicht zwingend der fiktionalen Wahrheit.",
+  "creative_instruction": "Entwickle eine subjektive Hörweise mit nachvollziehbaren Grenzen und alternativen Lesarten.",
+  "applications": [
+    "klang",
+    "perspektive",
+    "psychothriller"
+  ],
+  "quality_questions": [
+    "Bleibt die Unzuverlässigkeit fair vorbereitet?"
+  ],
+  "weaknesses": [
+    "Beliebige Halluzination als Erklärung."
+  ],
+  "audio_relevance": "Subjektive Klänge und objektive Anker trennen Ebenen.",
+  "related_ids": [
+    "A02",
+    "N09"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "perspektive",
+    "psychothriller"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

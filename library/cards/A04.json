@@ -1,0 +1,37 @@
+{
+  "id": "A04",
+  "version": 1,
+  "category": "A",
+  "name": "Klangliche Kontinuität",
+  "principle": "Ein Klang verbindet getrennte Orte, Zeiten oder Ereignisse.",
+  "creative_instruction": "Entwickle ein wiedererkennbares Motiv und unterschiedliche plausible Kontexte.",
+  "applications": [
+    "klang",
+    "geschichte",
+    "saga"
+  ],
+  "quality_questions": [
+    "Ist die Verbindung mehr als Dekoration?"
+  ],
+  "weaknesses": [
+    "Unmotivierte identische Klänge."
+  ],
+  "audio_relevance": "Klangbrücken verbinden Handlungsstränge.",
+  "related_ids": [
+    "M05",
+    "N11"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "geschichte",
+    "saga"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

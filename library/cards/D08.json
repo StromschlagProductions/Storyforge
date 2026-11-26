@@ -1,0 +1,36 @@
+{
+  "id": "D08",
+  "version": 1,
+  "category": "D",
+  "name": "Information enthüllen",
+  "principle": "Neue Information verändert Wissen oder Handlungsmöglichkeiten.",
+  "creative_instruction": "Lege Inhalt, Quelle, Zeitpunkt und Empfänger der Enthüllung fest.",
+  "applications": [
+    "enthüllung",
+    "mystery",
+    "wissen"
+  ],
+  "quality_questions": [
+    "Wer kann was tatsächlich wissen?"
+  ],
+  "weaknesses": [
+    "Wissen ohne Zugang zur Information."
+  ],
+  "audio_relevance": "Hinweis, Dialog und Hörperspektive getrennt planen.",
+  "related_ids": [
+    "M13",
+    "D10"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "enthüllung",
+    "mystery",
+    "wissen"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "D10",
+  "version": 1,
+  "category": "D",
+  "name": "Zusammenhang umdeuten",
+  "principle": "Eine neue Erkenntnis verändert die Bedeutung früherer Ereignisse.",
+  "creative_instruction": "Entwirf eine Enthüllung und prüfe rückwärts ihre Vorbereitung.",
+  "applications": [
+    "enthüllung",
+    "mystery",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Bleiben frühere Beobachtungen gültig?"
+  ],
+  "weaknesses": [
+    "Retcon statt fairer Umdeutung."
+  ],
+  "audio_relevance": "Wiederkehrender Klang oder Satz erhält neue Bedeutung.",
+  "related_ids": [
+    "M14",
+    "A01"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "enthüllung",
+    "mystery",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

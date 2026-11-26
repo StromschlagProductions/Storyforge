@@ -1,0 +1,37 @@
+{
+  "id": "A05",
+  "version": 1,
+  "category": "A",
+  "name": "Widersprechende Kanäle",
+  "principle": "Ein hörbares Ereignis widerspricht einer gesprochenen Aussage.",
+  "creative_instruction": "Entwirf eine Aussage und akustische Evidenz, die sie begründet infrage stellt.",
+  "applications": [
+    "klang",
+    "dialog",
+    "hinweise"
+  ],
+  "quality_questions": [
+    "Kann der Zuhörer den Widerspruch erkennen?"
+  ],
+  "weaknesses": [
+    "Widerspruch nur in nicht hörbarer Regie."
+  ],
+  "audio_relevance": "Dialog und Klang erzeugen eigenständige Informationen.",
+  "related_ids": [
+    "M02",
+    "M14"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "dialog",
+    "hinweise"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "N15",
+  "version": 1,
+  "category": "N",
+  "name": "Unlokalisierbare Bedrohung",
+  "principle": "Eine Gefahr ist wahrnehmbar, aber ihre Quelle bleibt unbestimmt.",
+  "creative_instruction": "Entwickle wahrnehmbare Folgen und mehrere plausible Quellen mit verschiedenen Risiken.",
+  "applications": [
+    "horror",
+    "klang",
+    "atmosphäre"
+  ],
+  "quality_questions": [
+    "Bleibt die Unsicherheit produktiv statt verwirrend?"
+  ],
+  "weaknesses": [
+    "Dauerhafte Unklarheit ohne Entwicklung."
+  ],
+  "audio_relevance": "Räumliche und subjektive Klangperspektiven erzeugen Unsicherheit.",
+  "related_ids": [
+    "A02",
+    "A01"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "klang",
+    "atmosphäre"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

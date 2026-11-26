@@ -1,0 +1,36 @@
+{
+  "id": "M01",
+  "version": 1,
+  "category": "M",
+  "name": "Verborgene Ursache",
+  "principle": "Getrennte Beobachtungen haben einen gemeinsamen Ursprung.",
+  "creative_instruction": "Entwickle drei unabhängige Symptome und eine Ursache, die jedes über eine eigene Kausalkette erklärt.",
+  "applications": [
+    "mystery",
+    "ursache",
+    "hinweise"
+  ],
+  "quality_questions": [
+    "Welche Beobachtung wäre ohne diese Ursache anders?"
+  ],
+  "weaknesses": [
+    "Universalerklärung ohne nachvollziehbare Zwischenschritte."
+  ],
+  "audio_relevance": "Wiederkehrende Klangdetails verbinden Orte.",
+  "related_ids": [
+    "M13",
+    "N04"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "ursache",
+    "hinweise"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

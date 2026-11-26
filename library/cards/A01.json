@@ -1,0 +1,37 @@
+{
+  "id": "A01",
+  "version": 1,
+  "category": "A",
+  "name": "Akustischer Kategorienirrtum",
+  "principle": "Ein hörbares Ereignis wird einer falschen Quelle oder Bedeutung zugeordnet.",
+  "creative_instruction": "Entwickle einen Klang mit zwei plausiblen Ursachen und eine faire spätere Umdeutung.",
+  "applications": [
+    "klang",
+    "mystery",
+    "horror"
+  ],
+  "quality_questions": [
+    "Kann derselbe Klang beide Lesarten tragen?"
+  ],
+  "weaknesses": [
+    "Die zweite Ursache klingt tatsächlich völlig anders."
+  ],
+  "audio_relevance": "Klang selbst trägt Hinweis und Enthüllung.",
+  "related_ids": [
+    "M11",
+    "D10"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "mystery",
+    "horror"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

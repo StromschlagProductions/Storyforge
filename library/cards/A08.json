@@ -1,0 +1,37 @@
+{
+  "id": "A08",
+  "version": 1,
+  "category": "A",
+  "name": "Musikalische Erinnerung",
+  "principle": "Ein musikalisches Motiv verbindet emotionale Erfahrungen über Zeit.",
+  "creative_instruction": "Etabliere ein Motiv in einem emotionalen Kontext und verändere später seine Bedeutung.",
+  "applications": [
+    "musik",
+    "emotion",
+    "saga"
+  ],
+  "quality_questions": [
+    "Ist die Verbindung ohne erklärenden Dialog wirksam?"
+  ],
+  "weaknesses": [
+    "Musik behauptet unverdiente Emotion."
+  ],
+  "audio_relevance": "Leitmotive können Erinnerung und Wandel vermitteln.",
+  "related_ids": [
+    "N13",
+    "D16"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "musik",
+    "emotion",
+    "saga"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

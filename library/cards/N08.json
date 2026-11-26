@@ -1,0 +1,36 @@
+{
+  "id": "N08",
+  "version": 1,
+  "category": "N",
+  "name": "Alltäglichkeit mit Abweichungen",
+  "principle": "Kleine Verstöße gegen Routine erzeugen schleichendes Grauen.",
+  "creative_instruction": "Etabliere eine wiedererkennbare Routine und variiere einzelne Details mit Folgen.",
+  "applications": [
+    "horror",
+    "alltag",
+    "atmosphäre"
+  ],
+  "quality_questions": [
+    "Ist die Abweichung ohne Erklärung erkennbar?"
+  ],
+  "weaknesses": [
+    "Beliebige gruselige Einzelheiten."
+  ],
+  "audio_relevance": "Wiederholte akustische Routinen machen Veränderungen hörbar.",
+  "related_ids": [
+    "D01",
+    "A01"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "alltag",
+    "atmosphäre"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

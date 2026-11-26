@@ -1,0 +1,37 @@
+{
+  "id": "A02",
+  "version": 1,
+  "category": "A",
+  "name": "Perspektivische Asymmetrie",
+  "principle": "Figuren und Publikum hören unterschiedliche Ausschnitte eines Geschehens.",
+  "creative_instruction": "Definiere pro Perspektive Zugang, Grenze und daraus mögliche Schlüsse.",
+  "applications": [
+    "klang",
+    "perspektive",
+    "spannung"
+  ],
+  "quality_questions": [
+    "Ist die Hörposition nachvollziehbar?"
+  ],
+  "weaknesses": [
+    "Unmotivierter Perspektivsprung."
+  ],
+  "audio_relevance": "Funk, Distanz und subjektive Hörweise begrenzen Information.",
+  "related_ids": [
+    "N15",
+    "M13"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "perspektive",
+    "spannung"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "M04",
+  "version": 1,
+  "category": "M",
+  "name": "Identitätsirrtum",
+  "principle": "Eine Person, Sache oder Institution wird falsch eingeordnet.",
+  "creative_instruction": "Entwickle zwei plausible Identitäten mit unterscheidbaren Indizien.",
+  "applications": [
+    "mystery",
+    "identität",
+    "horror"
+  ],
+  "quality_questions": [
+    "Sind beide Lesarten bis zur Enthüllung tragfähig?"
+  ],
+  "weaknesses": [
+    "Unvorbereiteter Doppelgänger."
+  ],
+  "audio_relevance": "Stimme und Verhalten können unterschiedliche Identitäten nahelegen.",
+  "related_ids": [
+    "N14",
+    "A09"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "identität",
+    "horror"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "D06",
+  "version": 1,
+  "category": "D",
+  "name": "Widerstand erzeugen",
+  "principle": "Ein Hindernis erschwert das Erreichen eines Ziels.",
+  "creative_instruction": "Entwickle Widerstand aus Figureninteressen oder etablierten Weltregeln.",
+  "applications": [
+    "konflikt",
+    "dramaturgie",
+    "handlung"
+  ],
+  "quality_questions": [
+    "Ist das Hindernis kausal vorbereitet?"
+  ],
+  "weaknesses": [
+    "Willkürliche Verzögerung."
+  ],
+  "audio_relevance": "Akustisch erfahrbare Hindernisse statt bloßer Beschreibung.",
+  "related_ids": [
+    "D04",
+    "D12"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "konflikt",
+    "dramaturgie",
+    "handlung"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

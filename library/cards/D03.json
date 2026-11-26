@@ -1,0 +1,36 @@
+{
+  "id": "D03",
+  "version": 1,
+  "category": "D",
+  "name": "Veränderung auslösen",
+  "principle": "Ein Ereignis stört den Ausgangszustand.",
+  "creative_instruction": "Entwickle einen Auslöser, der konkrete Handlungsmöglichkeiten verändert.",
+  "applications": [
+    "dramaturgie",
+    "anfang",
+    "handlung"
+  ],
+  "quality_questions": [
+    "Warum reagiert die Figur jetzt?"
+  ],
+  "weaknesses": [
+    "Zufall ohne Konsequenz."
+  ],
+  "audio_relevance": "Ein klarer akustischer Wechsel markiert den Einschnitt.",
+  "related_ids": [
+    "D04",
+    "N05"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "dramaturgie",
+    "anfang",
+    "handlung"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

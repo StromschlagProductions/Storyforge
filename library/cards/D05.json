@@ -1,0 +1,36 @@
+{
+  "id": "D05",
+  "version": 1,
+  "category": "D",
+  "name": "Entscheidung erzwingen",
+  "principle": "Konkurrierende Ziele verlangen eine bedeutsame Wahl.",
+  "creative_instruction": "Entwickle mindestens zwei realistische Optionen mit unterschiedlichen Kosten.",
+  "applications": [
+    "figuren",
+    "schuld",
+    "konflikt"
+  ],
+  "quality_questions": [
+    "Gibt es tatsächlich eine Wahl?"
+  ],
+  "weaknesses": [
+    "Scheinentscheidung ohne Alternative."
+  ],
+  "audio_relevance": "Dialog, Zögern und anschließende Handlung zeigen Entscheidung.",
+  "related_ids": [
+    "N13",
+    "D07"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "figuren",
+    "schuld",
+    "konflikt"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

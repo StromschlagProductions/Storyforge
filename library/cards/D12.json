@@ -1,0 +1,36 @@
+{
+  "id": "D12",
+  "version": 1,
+  "category": "D",
+  "name": "Konflikt verschärfen",
+  "principle": "Widersprüchliche Ziele geraten stärker aneinander.",
+  "creative_instruction": "Steigere Kosten oder Unvereinbarkeit aus bestehender Situation.",
+  "applications": [
+    "konflikt",
+    "spannung",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Ist Eskalation mehr als Lautstärke oder Gewalt?"
+  ],
+  "weaknesses": [
+    "Monotone Steigerung."
+  ],
+  "audio_relevance": "Pausen und wechselnde Gesprächsdynamik unterstützen Kontrast.",
+  "related_ids": [
+    "N06",
+    "D13"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "konflikt",
+    "spannung",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "M02",
+  "version": 1,
+  "category": "M",
+  "name": "Falsche Kausalität",
+  "principle": "Eine zeitliche oder räumliche Nähe wird als Ursache missverstanden.",
+  "creative_instruction": "Entwirf eine plausible falsche Verbindung und einen Test, der sie von der wirklichen Ursache trennt.",
+  "applications": [
+    "mystery",
+    "kausalität",
+    "irrtum"
+  ],
+  "quality_questions": [
+    "Warum ist der Irrtum vernünftig?"
+  ],
+  "weaknesses": [
+    "Willkürliche Täuschung."
+  ],
+  "audio_relevance": "Zwei aufeinanderfolgende Geräusche suggerieren eine falsche Ursache.",
+  "related_ids": [
+    "M14",
+    "A05"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "kausalität",
+    "irrtum"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

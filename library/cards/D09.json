@@ -1,0 +1,36 @@
+{
+  "id": "D09",
+  "version": 1,
+  "category": "D",
+  "name": "Überzeugung erschüttern",
+  "principle": "Ein Befund widerspricht einer handlungsleitenden Überzeugung.",
+  "creative_instruction": "Entwickle einen konkreten Gegenbeleg und plausible Reaktionen darauf.",
+  "applications": [
+    "figuren",
+    "psychothriller",
+    "erkenntnis"
+  ],
+  "quality_questions": [
+    "Warum hält oder revidiert die Figur ihre Überzeugung?"
+  ],
+  "weaknesses": [
+    "Sofortiger unbegründeter Meinungswechsel."
+  ],
+  "audio_relevance": "Reaktion und Subtext zeigen innere Veränderung.",
+  "related_ids": [
+    "N09",
+    "D14"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "figuren",
+    "psychothriller",
+    "erkenntnis"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

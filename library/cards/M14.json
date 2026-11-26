@@ -1,0 +1,36 @@
+{
+  "id": "M14",
+  "version": 1,
+  "category": "M",
+  "name": "Semantische Umdeutung",
+  "principle": "Eine wahre Aussage erhält später eine andere Bedeutung.",
+  "creative_instruction": "Formuliere eine Aussage mit zwei kontextabhängig plausiblen Bedeutungen.",
+  "applications": [
+    "enthüllung",
+    "mystery",
+    "dialog"
+  ],
+  "quality_questions": [
+    "Ist die erste Lesart fair vorbereitet?"
+  ],
+  "weaknesses": [
+    "Wortspiel statt kausaler Auflösung."
+  ],
+  "audio_relevance": "Dieselbe gesprochene Zeile wirkt bei Wiederholung anders.",
+  "related_ids": [
+    "D10",
+    "A01"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "enthüllung",
+    "mystery",
+    "dialog"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

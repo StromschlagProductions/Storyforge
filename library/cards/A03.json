@@ -1,0 +1,37 @@
+{
+  "id": "A03",
+  "version": 1,
+  "category": "A",
+  "name": "Negative Evidenz",
+  "principle": "Ein erwarteter Klang bleibt aus.",
+  "creative_instruction": "Etabliere ein hörbares Muster und nutze sein Fehlen als begründeten Hinweis.",
+  "applications": [
+    "klang",
+    "hinweise",
+    "horror"
+  ],
+  "quality_questions": [
+    "Ist die Abwesenheit wahrnehmbar?"
+  ],
+  "weaknesses": [
+    "Ein nie gehörtes Geräusch fehlt angeblich."
+  ],
+  "audio_relevance": "Stille erhält konkrete erzählerische Bedeutung.",
+  "related_ids": [
+    "M09",
+    "N07"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "hinweise",
+    "horror"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

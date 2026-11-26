@@ -1,0 +1,36 @@
+{
+  "id": "M10",
+  "version": 1,
+  "category": "M",
+  "name": "Gestaffelte Wahrheit",
+  "principle": "Eine richtige erste Antwort verdeckt eine tiefere Wahrheit.",
+  "creative_instruction": "Entwirf zwei Auflösungen, wobei die zweite die erste erklärt und ergänzt.",
+  "applications": [
+    "mystery",
+    "enthüllung",
+    "thriller"
+  ],
+  "quality_questions": [
+    "Bleibt die erste Auflösung wahr?"
+  ],
+  "weaknesses": [
+    "Endlose willkürliche Verschwörungsebenen."
+  ],
+  "audio_relevance": "Ein früher Dialog erhält eine zweite Bedeutung.",
+  "related_ids": [
+    "M11",
+    "D10"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "enthüllung",
+    "thriller"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

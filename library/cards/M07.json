@@ -1,0 +1,36 @@
+{
+  "id": "M07",
+  "version": 1,
+  "category": "M",
+  "name": "Funktionale Umkehr",
+  "principle": "Eine Schutzfunktion ist Teil der Gefahr.",
+  "creative_instruction": "Entwickle einen glaubwürdigen Schutzmechanismus, dessen normale Funktion unter bestimmten Umständen schadet.",
+  "applications": [
+    "horror",
+    "institution",
+    "schutz"
+  ],
+  "quality_questions": [
+    "Warum vertrauten die Figuren ihm?"
+  ],
+  "weaknesses": [
+    "Böse Institution ohne Motiv."
+  ],
+  "audio_relevance": "Ein vertrautes Sicherheitssignal bekommt eine bedrohliche Bedeutung.",
+  "related_ids": [
+    "N07",
+    "A01"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "institution",
+    "schutz"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

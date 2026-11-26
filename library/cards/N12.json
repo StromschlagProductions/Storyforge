@@ -1,0 +1,36 @@
+{
+  "id": "N12",
+  "version": 1,
+  "category": "N",
+  "name": "Kontrollierte Mythologie-Erweiterung",
+  "principle": "Neue Geschichten vertiefen bestehende Regeln statt sie beliebig zu ersetzen.",
+  "creative_instruction": "Identifiziere offene Stellen im Kanon und entwickle Erweiterungen mit überprüfbaren Grenzen.",
+  "applications": [
+    "saga",
+    "kanon",
+    "mythologie"
+  ],
+  "quality_questions": [
+    "Widerspricht die Erweiterung bestätigten Fakten?"
+  ],
+  "weaknesses": [
+    "Ständige Macht- und Bedrohungssteigerung."
+  ],
+  "audio_relevance": "Wiederkehrende Klangmotive verbinden Werke ohne Erklärungspflicht.",
+  "related_ids": [
+    "M05",
+    "N11"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "saga",
+    "kanon",
+    "mythologie"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

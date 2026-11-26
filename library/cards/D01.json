@@ -1,0 +1,36 @@
+{
+  "id": "D01",
+  "version": 1,
+  "category": "D",
+  "name": "Ausgangszustand etablieren",
+  "principle": "Ein verständlicher Ausgangszustand macht Veränderungen bedeutsam.",
+  "creative_instruction": "Definiere normale Beziehungen, Ziele und Erwartungen mit wenigen konkreten Szenen.",
+  "applications": [
+    "dramaturgie",
+    "anfang",
+    "alltag"
+  ],
+  "quality_questions": [
+    "Was muss vor der Abweichung bekannt sein?"
+  ],
+  "weaknesses": [
+    "Überlange Exposition."
+  ],
+  "audio_relevance": "Routineklänge etablieren Ort und Zustand.",
+  "related_ids": [
+    "N08",
+    "D02"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "dramaturgie",
+    "anfang",
+    "alltag"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

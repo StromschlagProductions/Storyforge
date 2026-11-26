@@ -1,0 +1,36 @@
+{
+  "id": "D13",
+  "version": 1,
+  "category": "D",
+  "name": "Ruhephase schaffen",
+  "principle": "Kontrast und Verarbeitung ermöglichen neue Spannung.",
+  "creative_instruction": "Plane eine Phase mit eigener atmosphärischer oder emotionaler Funktion.",
+  "applications": [
+    "atmosphäre",
+    "spannung",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Was gewinnt das Publikum in der Ruhe?"
+  ],
+  "weaknesses": [
+    "Füllszene ohne Funktion."
+  ],
+  "audio_relevance": "Stille und Atmo geben Raum für Verarbeitung.",
+  "related_ids": [
+    "D12",
+    "A08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "atmosphäre",
+    "spannung",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

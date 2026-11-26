@@ -1,0 +1,36 @@
+{
+  "id": "N04",
+  "version": 1,
+  "category": "N",
+  "name": "Konvergierende Ermittlungen",
+  "principle": "Unabhängige Rätsel führen zu einer gemeinsamen Wahrheit.",
+  "creative_instruction": "Entwickle zwei eigenständig interessante Rätsel und suche eine kausal tragfähige Verbindung.",
+  "applications": [
+    "mystery",
+    "thriller",
+    "hinweise"
+  ],
+  "quality_questions": [
+    "Funktionieren beide Ermittlungen auch vor ihrer Verbindung?"
+  ],
+  "weaknesses": [
+    "Erzwungene allumfassende Verschwörung."
+  ],
+  "audio_relevance": "Unterschiedliche Klangmilieus erleichtern Orientierung.",
+  "related_ids": [
+    "M01",
+    "M13"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "thriller",
+    "hinweise"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

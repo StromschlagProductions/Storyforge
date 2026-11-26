@@ -1,0 +1,36 @@
+{
+  "id": "N02",
+  "version": 1,
+  "category": "N",
+  "name": "Wissenschaftliche Grenzüberschreitung",
+  "principle": "Ein Forschungsziel kollidiert mit ethischen oder praktischen Grenzen.",
+  "creative_instruction": "Entwickle eine fachlich motivierte Entscheidung mit konkurrierenden Pflichten.",
+  "applications": [
+    "wissenschaft",
+    "schuld",
+    "ethik"
+  ],
+  "quality_questions": [
+    "Sind Nutzen und Risiko nachvollziehbar?"
+  ],
+  "weaknesses": [
+    "Forschende als pauschal gewissenlose Figuren."
+  ],
+  "audio_relevance": "Konflikte werden über Entscheidungen und Versuchsergebnisse hörbar.",
+  "related_ids": [
+    "M12",
+    "D05"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "schuld",
+    "ethik"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

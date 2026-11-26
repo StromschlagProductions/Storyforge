@@ -1,0 +1,37 @@
+{
+  "id": "A09",
+  "version": 1,
+  "category": "A",
+  "name": "Stimmenidentität",
+  "principle": "Eine vertraute Stimme erscheint in einem unerwarteten Kontext.",
+  "creative_instruction": "Entwickle eine akustisch unterscheidbare Stimme und mehrere begründete Erklärungen ihrer Wiederkehr.",
+  "applications": [
+    "stimme",
+    "identität",
+    "horror"
+  ],
+  "quality_questions": [
+    "Sind Identität und mögliche Täuschung nachvollziehbar?"
+  ],
+  "weaknesses": [
+    "Ununterscheidbare Stimmen als fairer Hinweis ausgegeben."
+  ],
+  "audio_relevance": "Stimmen sind selbst narrative Evidenz.",
+  "related_ids": [
+    "M04",
+    "N14"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "stimme",
+    "identität",
+    "horror"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

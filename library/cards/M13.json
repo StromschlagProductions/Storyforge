@@ -1,0 +1,36 @@
+{
+  "id": "M13",
+  "version": 1,
+  "category": "M",
+  "name": "Verteilte Wahrheit",
+  "principle": "Unterschiedliche Figuren verfügen über verschiedene Teile der Erklärung.",
+  "creative_instruction": "Verteile notwendige Informationen und begründe, warum sie nicht sofort zusammengeführt werden.",
+  "applications": [
+    "mystery",
+    "figuren",
+    "ensemble"
+  ],
+  "quality_questions": [
+    "Ist jede Wissensgrenze motiviert?"
+  ],
+  "weaknesses": [
+    "Künstliches Verschweigen."
+  ],
+  "audio_relevance": "Unterschiedliche Stimmen und Schauplätze tragen Teilinformationen.",
+  "related_ids": [
+    "N11",
+    "D08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "figuren",
+    "ensemble"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

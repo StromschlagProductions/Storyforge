@@ -1,0 +1,36 @@
+{
+  "id": "D14",
+  "version": 1,
+  "category": "D",
+  "name": "Erkenntnis ermöglichen",
+  "principle": "Eine Figur oder das Publikum versteht einen Zusammenhang neu.",
+  "creative_instruction": "Verbinde vorhandene Beobachtungen mit einem nachvollziehbaren Schluss.",
+  "applications": [
+    "erkenntnis",
+    "figuren",
+    "mystery"
+  ],
+  "quality_questions": [
+    "Ist die Erkenntnis aus verfügbarem Wissen ableitbar?"
+  ],
+  "weaknesses": [
+    "Erklärung aus dem Nichts."
+  ],
+  "audio_relevance": "Akustische Evidenz kann Erkenntnis ohne Monolog vermitteln.",
+  "related_ids": [
+    "D08",
+    "D09"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "erkenntnis",
+    "figuren",
+    "mystery"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

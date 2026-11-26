@@ -1,0 +1,36 @@
+{
+  "id": "M16",
+  "version": 1,
+  "category": "M",
+  "name": "Erkenntnis als Gefahr",
+  "principle": "Das Wissen um ein Geheimnis verändert die Lage der Wissenden.",
+  "creative_instruction": "Entwickle einen Mechanismus, durch den Erkenntnis neue Risiken oder Pflichten erzeugt.",
+  "applications": [
+    "horror",
+    "mystery",
+    "erkenntnis"
+  ],
+  "quality_questions": [
+    "Warum ändert das Wissen die Lage?"
+  ],
+  "weaknesses": [
+    "Magische Gefahr ohne etablierte Regeln."
+  ],
+  "audio_relevance": "Ein gehörtes Signal kann eine neue Entscheidung erzwingen.",
+  "related_ids": [
+    "D08",
+    "M06"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "mystery",
+    "erkenntnis"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

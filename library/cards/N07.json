@@ -1,0 +1,36 @@
+{
+  "id": "N07",
+  "version": 1,
+  "category": "N",
+  "name": "Erosion des sicheren Ortes",
+  "principle": "Ein vertrauter Schutzraum verliert schrittweise seine Sicherheit.",
+  "creative_instruction": "Etabliere Schutz und Vertrauen, dann entwickle konkrete schrittweise Verluste.",
+  "applications": [
+    "horror",
+    "isolation",
+    "schutz"
+  ],
+  "quality_questions": [
+    "Ist die anfängliche Sicherheit glaubwürdig?"
+  ],
+  "weaknesses": [
+    "Sofortige Eskalation ohne Kontrast."
+  ],
+  "audio_relevance": "Vertraute Raumgeräusche verschwinden oder verändern sich.",
+  "related_ids": [
+    "M07",
+    "A03"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "horror",
+    "isolation",
+    "schutz"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

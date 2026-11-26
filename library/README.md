@@ -1,0 +1,5 @@
+# Narrative Library v1.0
+
+59 redaktionelle Arbeitskarten: M01–M16, N01–N16, D01–D17, A01–A10. Öffentliche abstrakte Verfahren, keine privaten Stoffe. Grundlage sind die in der Konzeptarbeit definierten Mechanismen; keine empirische Qualitätsvalidierung. Jede Karte ist eine eigene JSON-Datei in cards/. Aufgabenarten: stoffidee, geheimnis, mutation, kritik, dramaturgie, hörspiel. Schlagwörter sind exakte normalisierte Begriffe; Auswahl ist kein Qualitätsurteil. Karten nur gezielt verwenden; bei fehlendem Treffer bewusst ohne Karte oder mit dokumentierter alternativer Auswahl arbeiten. Keine automatische Kanonänderung. Historische Versionen bleiben über Git nachvollziehbar. Synthetische Beispiele bleiben getrennt.
+
+SF-003B: Stoffschmiede mit expliziter Auswahl (2–5 Karten), strukturell unterschiedlichen Stoffkeimen, fiktionalen Annahmen und qualitativer Reflexion. Kein automatischer Commit von Ideen. Vor kreativer Qualitätsbewertung realen Ollama-Lauf durchführen. Die redaktionellen Karten sind nicht mit einem unabhängigen Quellen- oder Kreativitätstest gleichzusetzen.

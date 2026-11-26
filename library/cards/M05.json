@@ -1,0 +1,36 @@
+{
+  "id": "M05",
+  "version": 1,
+  "category": "M",
+  "name": "Historische Kontinuität",
+  "principle": "Ein vermeintlich abgeschlossenes Ereignis wirkt als laufender Prozess fort.",
+  "creative_instruction": "Entwirf eine historische Ursache und eine nachvollziehbare Kette bis zur Gegenwart.",
+  "applications": [
+    "geschichte",
+    "archäologie",
+    "mystery"
+  ],
+  "quality_questions": [
+    "Warum blieb die Kontinuität unerkannt?"
+  ],
+  "weaknesses": [
+    "Unbegründete jahrhundertelange Geheimhaltung."
+  ],
+  "audio_relevance": "Archivaufnahmen und heutige Klänge schaffen Kontinuität.",
+  "related_ids": [
+    "N03",
+    "A04"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "geschichte",
+    "archäologie",
+    "mystery"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "M08",
+  "version": 1,
+  "category": "M",
+  "name": "Motivumkehr",
+  "principle": "Eine Handlung ist real, ihre Absicht wird falsch verstanden.",
+  "creative_instruction": "Entwirf zwei Motive für dieselbe Handlung und Hinweise auf das tatsächliche.",
+  "applications": [
+    "figuren",
+    "mystery",
+    "motiv"
+  ],
+  "quality_questions": [
+    "Bleibt das Verhalten aus Figurensicht plausibel?"
+  ],
+  "weaknesses": [
+    "Nachträglich erfundene Motivation."
+  ],
+  "audio_relevance": "Subtext und Reaktionen erhalten rückwirkend Gewicht.",
+  "related_ids": [
+    "D09",
+    "M14"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "figuren",
+    "mystery",
+    "motiv"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

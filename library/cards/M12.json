@@ -1,0 +1,36 @@
+{
+  "id": "M12",
+  "version": 1,
+  "category": "M",
+  "name": "Selbstverursachung",
+  "principle": "Die Untersuchung oder Abwehr trägt zur Entstehung des Problems bei.",
+  "creative_instruction": "Entwirf einen Rückkopplungsprozess mit nachvollziehbaren Auslösern und Grenzen.",
+  "applications": [
+    "wissenschaft",
+    "schuld",
+    "kausalität"
+  ],
+  "quality_questions": [
+    "Welche Entscheidung könnte die Schleife unterbrechen?"
+  ],
+  "weaknesses": [
+    "Schuld ohne tatsächliche Kausalität."
+  ],
+  "audio_relevance": "Mess- oder Warnsignale verändern sich nach Eingriffen.",
+  "related_ids": [
+    "M15",
+    "N02"
+  ],
+  "source": "STORYFORGE Forschungsbericht 02 Mystery Design; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "schuld",
+    "kausalität"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik"
+  ]
+}

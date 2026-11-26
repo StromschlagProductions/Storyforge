@@ -1,0 +1,36 @@
+{
+  "id": "N05",
+  "version": 1,
+  "category": "N",
+  "name": "Unschuldiger Ausgangspunkt",
+  "principle": "Ein alltägliches Fachproblem öffnet einen unerwarteten Abgrund.",
+  "creative_instruction": "Wähle einen glaubwürdigen Routineauftrag und leite eine verstörende Entdeckung daraus ab.",
+  "applications": [
+    "wissenschaft",
+    "mystery",
+    "horror"
+  ],
+  "quality_questions": [
+    "Entsteht das Geheimnis organisch aus der Routine?"
+  ],
+  "weaknesses": [
+    "Beliebiger Schock ohne Verbindung."
+  ],
+  "audio_relevance": "Arbeitsgeräusche etablieren Normalität vor der Abweichung.",
+  "related_ids": [
+    "N08",
+    "D03"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "wissenschaft",
+    "mystery",
+    "horror"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

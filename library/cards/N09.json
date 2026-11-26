@@ -1,0 +1,36 @@
+{
+  "id": "N09",
+  "version": 1,
+  "category": "N",
+  "name": "Konkurrierende Weltbilder",
+  "principle": "Dieselben Befunde werden aus verschiedenen Überzeugungen interpretiert.",
+  "creative_instruction": "Entwickle zwei ernstzunehmende Modelle und Beobachtungen, die beide herausfordern.",
+  "applications": [
+    "mystery",
+    "wissenschaft",
+    "figuren"
+  ],
+  "quality_questions": [
+    "Kann jede Seite begründet irren?"
+  ],
+  "weaknesses": [
+    "Eine Seite dient nur als Karikatur."
+  ],
+  "audio_relevance": "Dialoge zeigen unterschiedliche Deutungen desselben Klangs.",
+  "related_ids": [
+    "M02",
+    "D09"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "mystery",
+    "wissenschaft",
+    "figuren"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

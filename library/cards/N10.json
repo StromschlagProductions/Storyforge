@@ -1,0 +1,36 @@
+{
+  "id": "N10",
+  "version": 1,
+  "category": "N",
+  "name": "Prämissenverdichtung",
+  "principle": "Ein starker Grundgedanke trägt mehrere Konflikte und Wirkungen.",
+  "creative_instruction": "Entferne oder verschmelze Nebenmechanismen und prüfe, welche Funktionen erhalten bleiben.",
+  "applications": [
+    "stoffidee",
+    "kurzform",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Wird der Stoff stärker oder nur kürzer?"
+  ],
+  "weaknesses": [
+    "Reduktion wichtiger emotionaler Ebenen."
+  ],
+  "audio_relevance": "Wenige klar unterscheidbare Motive verbessern Verständlichkeit.",
+  "related_ids": [
+    "N13",
+    "M06"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "stoffidee",
+    "kurzform",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}

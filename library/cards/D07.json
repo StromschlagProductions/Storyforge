@@ -1,0 +1,36 @@
+{
+  "id": "D07",
+  "version": 1,
+  "category": "D",
+  "name": "Konsequenz eintreten lassen",
+  "principle": "Handlungen verändern die spätere Lage.",
+  "creative_instruction": "Verfolge direkte und indirekte Folgen einer konkreten Entscheidung.",
+  "applications": [
+    "kausalität",
+    "schuld",
+    "dramaturgie"
+  ],
+  "quality_questions": [
+    "Welche Folge wäre ohne die Entscheidung ausgeblieben?"
+  ],
+  "weaknesses": [
+    "Zufällige Folge statt Kausalität."
+  ],
+  "audio_relevance": "Spätere Szenen machen Folgen hörbar.",
+  "related_ids": [
+    "M15",
+    "D05"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "kausalität",
+    "schuld",
+    "dramaturgie"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

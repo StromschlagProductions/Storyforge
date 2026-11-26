@@ -1,0 +1,36 @@
+{
+  "id": "D15",
+  "version": 1,
+  "category": "D",
+  "name": "Konflikt auflösen",
+  "principle": "Eine Entscheidung oder Veränderung beendet den zentralen Konflikt.",
+  "creative_instruction": "Entwickle eine Auflösung aus etablierten Regeln und früheren Entscheidungen.",
+  "applications": [
+    "finale",
+    "dramaturgie",
+    "handlung"
+  ],
+  "quality_questions": [
+    "Sind verbleibende Kosten sichtbar?"
+  ],
+  "weaknesses": [
+    "Rettung durch neue unbegründete Regel."
+  ],
+  "audio_relevance": "Akustische Folgen zeigen Abschluss.",
+  "related_ids": [
+    "D07",
+    "D16"
+  ],
+  "source": "STORYFORGE Forschungsbericht 03 Dramaturgische Intelligenz; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "finale",
+    "dramaturgie",
+    "handlung"
+  ],
+  "task_types": [
+    "dramaturgie",
+    "mutation",
+    "kritik",
+    "stoffidee"
+  ]
+}

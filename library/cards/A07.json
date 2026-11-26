@@ -1,0 +1,37 @@
+{
+  "id": "A07",
+  "version": 1,
+  "category": "A",
+  "name": "Akustischer Zeuge",
+  "principle": "Eine Aufnahme enthält einen unbeachteten oder falsch verstandenen Hinweis.",
+  "creative_instruction": "Entwickle Aufnahmebedingungen, wahrnehmbares Detail und dessen überprüfbare Bedeutung.",
+  "applications": [
+    "klang",
+    "hinweise",
+    "wissenschaft"
+  ],
+  "quality_questions": [
+    "War das Detail tatsächlich aufnehmbar?"
+  ],
+  "weaknesses": [
+    "Unmögliche nachträgliche Informationsgewinnung."
+  ],
+  "audio_relevance": "Wiederholtes Anhören erlaubt eigene Entdeckung.",
+  "related_ids": [
+    "A05",
+    "D08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 07 Akustische Narratologie; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "klang",
+    "hinweise",
+    "wissenschaft"
+  ],
+  "task_types": [
+    "stoffidee",
+    "geheimnis",
+    "mutation",
+    "kritik",
+    "hörspiel"
+  ]
+}

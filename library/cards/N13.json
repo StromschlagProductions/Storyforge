@@ -1,0 +1,36 @@
+{
+  "id": "N13",
+  "version": 1,
+  "category": "N",
+  "name": "Emotionaler Anker",
+  "principle": "Ein persönlicher Konflikt verleiht dem außergewöhnlichen Geschehen Bedeutung.",
+  "creative_instruction": "Verknüpfe das Geheimnis mit einem konkreten Bedürfnis, Verlust oder Dilemma.",
+  "applications": [
+    "figuren",
+    "schuld",
+    "emotion"
+  ],
+  "quality_questions": [
+    "Würde die Figur auch ohne das Rätsel interessieren?"
+  ],
+  "weaknesses": [
+    "Trauma als bloße Dekoration."
+  ],
+  "audio_relevance": "Stimme, Schweigen und musikalische Rückbezüge tragen Gefühle.",
+  "related_ids": [
+    "D05",
+    "A08"
+  ],
+  "source": "STORYFORGE Forschungsbericht 04 Erzählerische Grammatik; redaktionelle Arbeitsabstraktion, v1.0",
+  "keywords": [
+    "figuren",
+    "schuld",
+    "emotion"
+  ],
+  "task_types": [
+    "stoffidee",
+    "mutation",
+    "kritik",
+    "geheimnis"
+  ]
+}
