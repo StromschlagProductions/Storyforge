@@ -3,8 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from storyforge import (ContextLimitError, Dialogue, FakeProvider, Memory,
-                        NarrativeLibrary)
+from uuid import uuid4
+
+from storyforge import (ContextLimitError, Decision, Dialogue, FakeProvider, Memory,
+                        NarrativeLibrary, Snapshot)
 
 
 FIXTURES = Path(__file__).resolve().parents[1] / "examples" / "synthetic_cards"
@@ -30,6 +32,14 @@ def test_karten_aus_dateien_laden_und_version_aktualisieren(tmp_path):
     assert updated.get("M01").version == 2
     assert updated.get("M01").name == "Aktualisierte synthetische Karte"
     assert library.get("M01").version == 1
+    new_card = json.loads((folder / "D01.json").read_text(encoding="utf-8"))
+    new_card["id"] = "D02"
+    new_card["name"] = "Zusätzliche synthetische Karte"
+    (folder / "D02.json").write_text(json.dumps(new_card, ensure_ascii=False), encoding="utf-8")
+    expanded = NarrativeLibrary.load(folder)
+    assert expanded.get("D02").name == "Zusätzliche synthetische Karte"
+    with pytest.raises(KeyError):
+        library.get("D02")
 
 
 @pytest.mark.parametrize("change", [
@@ -84,6 +94,10 @@ def test_filter_und_reproduzierbare_begrenzte_auswahl(tmp_path):
     assert [card.id for card in focused.cards] == ["M01"]
     assert focused.keywords == ("perspektive",)
     assert library.select("unbekannt").cards == ()
+    with pytest.raises(KeyError):
+        library.get("M99")
+    with pytest.raises(KeyError):
+        library.related("M99")
     with pytest.raises(ValueError):
         library.select("stoffidee", limit=0)
 
@@ -120,9 +134,33 @@ def test_karten_respektieren_kontextgrenze_ohne_entscheidungen_zu_kuerzen(tmp_pa
     memory = Memory(tmp_path / "projekt.sqlite3")
     project = memory.create_project("Synthetisches Werk")
     branch = memory.list_branches(project.id)[0]
+    decision = Decision(id=uuid4(), target="Klangfarbe", action="beibehalten",
+                        rationale="Verbindliche Vorgabe", author="Autor")
+    revision = memory.approve(memory.propose(branch.id, branch.head_id,
+                                              Snapshot(decisions=[decision]), "Start").id,
+                              approved_by="Autor", explicit_approval=True)
     provider = FakeProvider(["nicht verwendet"])
     with pytest.raises(ContextLimitError):
         Dialogue(memory, provider, max_context_chars=100).ask(
             project.id, branch.id, "Frage", cards=selection)
     assert provider.requests == []
+    assert memory.list_branches(project.id)[0].head_id == revision.id
+    assert memory.get_revision(revision.id).snapshot.decisions == [decision]
+
+
+def test_leere_kartenauswahl_und_projektisolation(tmp_path):
+    library = NarrativeLibrary.load(FIXTURES)
+    empty = library.select("unbekannte-aufgabe")
+    memory = Memory(tmp_path / "projekt.sqlite3")
+    project = memory.create_project("Ausgewählt")
+    other = memory.create_project("Fremd")
+    branch = memory.list_branches(project.id)[0]
+    other_branch = memory.list_branches(other.id)[0]
+    provider = FakeProvider(["Antwort"])
+    result = Dialogue(memory, provider).ask(project.id, branch.id, "Frage", cards=empty)
+    core = json.loads(provider.requests[0].messages[0]["content"].split("Projektkontext:\n", 1)[1])
+    assert core["wissenskarten"] == []
+    assert result.manifest["cards"] == []
+    assert str(other.id) not in provider.requests[0].messages[0]["content"]
     assert memory.list_branches(project.id)[0].head_id == branch.head_id
+    assert memory.list_branches(other.id)[0].head_id == other_branch.head_id
