@@ -92,6 +92,8 @@ class Memory:
                        universe_title: str | None = None, universe_id: UUID | None = None) -> Project:
         if not title.strip():
             raise ValueError("Projekttitel fehlt")
+        if work_title is not None and not work_title.strip():
+            raise ValueError("Werktitel fehlt")
         if universe_id and universe_title:
             raise ValueError("Universum per ID oder neuem Titel wählen")
         project_id, work_id, branch_id, revision_id = (uuid4() for _ in range(4))
@@ -229,23 +231,20 @@ class Memory:
                     datetime.now(timezone.utc).isoformat(), author, description, _hash(snapshot), _dump(snapshot)))
 
     def export_json(self, project_id: UUID) -> str:
-        project = self.get_project(project_id)
-        branches = self.list_branches(project_id)
-        with self._connection() as db:
-            rows = db.execute("SELECT id FROM revisions WHERE project_id=? ORDER BY created_at, rowid",
-                              (str(project_id),)).fetchall()
+        project, branches, revisions = self._export_data(project_id)
         payload = {"schema_version": 1, "project": project.model_dump(mode="json"),
                    "branches": [branch.model_dump(mode="json") for branch in branches],
-                   "revisions": [self.get_revision(UUID(row["id"])).model_dump(mode="json") for row in rows]}
+                   "revisions": [revision.model_dump(mode="json") for revision in revisions]}
         return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
     def export_markdown(self, project_id: UUID) -> str:
-        project = self.get_project(project_id)
+        project, branches, revisions = self._export_data(project_id)
+        by_id = {revision.id: revision for revision in revisions}
         lines = [f"# {project.title}", "", f"Projekt-ID: `{project.id}`  ",
                  f"Werk: {project.work_title} (`{project.work_id}`)  ",
                  f"Universum: {project.universe_title or 'keines'}", ""]
-        for branch in self.list_branches(project_id):
-            revision = self.get_revision(branch.head_id)
+        for branch in branches:
+            revision = by_id[branch.head_id]
             lines += [f"## Variante: {branch.name}", "", f"Revision: `{revision.id}`", "", "### Stoffideen", ""]
             for idea in revision.snapshot.ideas:
                 lines += [f"- **{idea.title}** (`{idea.id}`): {idea.premise}"]
@@ -258,6 +257,26 @@ class Memory:
                 lines += ["- Keine Entscheidungen."]
             lines += [""]
         return "\n".join(lines)
+
+    def _export_data(self, project_id: UUID) -> tuple[Project, list[Branch], list[Revision]]:
+        # Ein SQLite-Lese-Snapshot verhindert gemischte Revisionsstände bei paralleler Freigabe.
+        with self._connection() as db:
+            db.execute("BEGIN")
+            row = db.execute("""SELECT p.id, p.title, w.id AS work_id, w.title AS work_title,
+                u.id AS universe_id, u.title AS universe_title FROM projects p
+                JOIN works w ON w.project_id=p.id LEFT JOIN universes u ON u.id=p.universe_id
+                WHERE p.id=?""", (str(project_id),)).fetchone()
+            if row is None:
+                raise NotFoundError(project_id)
+            project = Project.model_validate(dict(row))
+            branch_rows = db.execute("SELECT * FROM branches WHERE project_id=? ORDER BY name",
+                                     (str(project_id),)).fetchall()
+            revision_rows = db.execute("SELECT * FROM revisions WHERE project_id=? ORDER BY created_at, rowid",
+                                       (str(project_id),)).fetchall()
+        branches = [Branch.model_validate(dict(item)) for item in branch_rows]
+        revisions = [Revision.model_validate({**dict(item), "snapshot": json.loads(item["snapshot"])})
+                     for item in revision_rows]
+        return project, branches, revisions
 
     def export_file(self, project_id: UUID, path: str | Path, *, format: str) -> Path:
         """Schreibt einen Export atomar in die angegebene Datei."""
