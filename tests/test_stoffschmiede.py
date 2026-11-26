@@ -214,3 +214,79 @@ def test_leere_bibliothek_erfindet_keine_karten_ids(tmp_path):
     assert run.manifest["cards"] == []
     assert all(seed.mechanism_card_id is None and seed.used_card_ids == [] for seed in run.candidates)
     assert memory.list_branches(project.id)[0].head_id == branch.head_id
+
+
+def test_prozessneustart_manifest_und_freier_prompt(tmp_path):
+    import subprocess
+    import sys
+
+    memory, project, branch, library = _setup(tmp_path)
+    ids = [card.id for card in Stoffschmiede(memory, FakeProvider([]), library).select_cards(
+        "Klang", limit=3).cards]
+    provider = FakeProvider([_response(branch.head_id, ids)])
+    run = Stoffschmiede(memory, provider, library).develop(project.id, branch.id, "Klang", card_limit=3)
+    assert len(provider.requests) == 1
+    request = provider.requests[0]
+    context = json.loads(request.messages[0]["content"].split("Projektkontext:\n", 1)[1])
+    assert [(card["id"], card["version"]) for card in context["wissenskarten"]] == [
+        (card["id"], card["version"]) for card in run.manifest["cards"]]
+    assert context["revision"]["id"] == run.manifest["revision_id"]
+    assert context["variante"]["id"] == run.manifest["branch_id"]
+    assert "keine Handlungsschablonen" in request.messages[-1]["content"]
+    assert "Weder Kartenfelder noch Prüffragen" in request.messages[-1]["content"]
+    code = ("import json,sys; from uuid import UUID; from storyforge import Memory; "
+            "m=Memory(sys.argv[1]); r=m.get_creative_run(UUID(sys.argv[2])); "
+            "print(json.dumps({'manifest':r['manifest'],'candidates':r['candidates'],"
+            "'head':str(m.list_branches(UUID(sys.argv[3]))[0].head_id)}))")
+    output = subprocess.check_output([sys.executable, "-c", code, str(memory.path),
+                                      str(run.id), str(project.id)], text=True)
+    restored = json.loads(output)
+    assert restored["manifest"] == run.manifest
+    assert restored["candidates"] == [seed.model_dump(mode="json") for seed in run.candidates]
+    assert restored["head"] == str(branch.head_id)
+
+
+def test_falsche_mechanismuskarte_und_abbruch_nach_antwort(tmp_path):
+    memory, project, branch, library = _setup(tmp_path)
+    ids = [card.id for card in Stoffschmiede(memory, FakeProvider([]), library).select_cards(
+        "Klang", limit=3).cards]
+    payload = json.loads(_response(branch.head_id, ids))
+    payload["candidates"][0]["mechanism_card_id"] = ids[1]
+    with pytest.raises(InvalidModelResponse):
+        Stoffschmiede(memory, FakeProvider([json.dumps(payload)]), library).develop(
+            project.id, branch.id, "Klang", card_limit=3)
+
+    cancel = Event()
+
+    class CancellingProvider(FakeProvider):
+        def generate(self, request, event=None):
+            result = super().generate(request, event)
+            cancel.set()
+            return result
+
+    with pytest.raises(ModelCancelled):
+        Stoffschmiede(memory, CancellingProvider([_response(branch.head_id, ids)]), library).develop(
+            project.id, branch.id, "Klang", card_limit=3, cancel=cancel)
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT COUNT(*) FROM creative_runs").fetchone()[0] == 0
+
+
+def test_windows_konsolenausgabe_zeigt_alle_stofffelder(tmp_path):
+    import importlib.util
+
+    memory, project, branch, library = _setup(tmp_path)
+    ids = [card.id for card in Stoffschmiede(memory, FakeProvider([]), library).select_cards(
+        "Klang", limit=3).cards]
+    run = Stoffschmiede(memory, FakeProvider([_response(branch.head_id, ids)]), library).develop(
+        project.id, branch.id, "Klang", card_limit=3)
+    script = Path(__file__).resolve().parents[1] / "scripts" / "stoffschmiede_smoke.py"
+    spec = importlib.util.spec_from_file_location("stoffschmiede_smoke", script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output = module.format_result(run)
+    assert all(value in output for value in (
+        run.candidates[0].title, run.candidates[0].premise,
+        run.candidates[0].narrative_promise, run.candidates[0].personal_conflict,
+        run.candidates[0].development, run.candidates[0].audio_potential,
+        run.candidates[0].fictional_assumptions[0], run.candidates[0].weaknesses[0]))
+    assert output.count("=== Stoffkeim") == 3

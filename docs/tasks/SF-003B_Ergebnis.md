@@ -22,42 +22,44 @@ Beispiel ohne Modellinstallation mit einem synthetischen Projekt: `FakeProvider`
 
 ## Tests und Dateien
 
-`python -m pytest -q`: **57 bestanden**, einschließlich aller bisherigen 44 Tests. Neue Fake-Provider-Tests prüfen produktive Karten, Stoffkeime ohne Skript, unterschiedliche Kartenausgangspunkte, Kontextmanifest, unverbindliche Persistenz, Fallback einschließlich leerer Bibliothek, optionale Reflexion, ungültige Antworten und Karten-IDs, Timeout/Abbruch, Projektisolation, Autorenentscheidungen, veraltete Entwürfe und Migration. Es wurde **kein echtes Ollama-Modell** in diesen automatisierten Tests aufgerufen; auf der Prüfmaschine ist Ollama nicht installiert. Ein echter kreativer Qualitätstest wurde nicht durchgeführt.
+`.venv/bin/python -m pytest -q`: **60 bestanden**, einschließlich aller bisherigen 44 Tests. Neue Fake-Provider-Tests prüfen produktive Karten, Stoffkeime ohne Skript, unterschiedliche Kartenausgangspunkte, Kontextmanifest, unverbindliche Persistenz, Fallback einschließlich leerer Bibliothek, optionale Reflexion, ungültige Antworten und Karten-IDs, Timeout/Abbruch, Projektisolation, Autorenentscheidungen, veraltete Entwürfe und Migration. Es wurde **kein echtes Ollama-Modell** in diesen automatisierten Tests aufgerufen; auf der Prüfmaschine ist Ollama nicht installiert. Ein echter kreativer Qualitätstest wurde nicht durchgeführt. Die Promptprüfung bestätigt ausdrücklich kreative Freiheit: Karten sind Ausgangspunkte, ihre Felder, Prüffragen und Schwächen keine verpflichtenden Handlungselemente. Verschiedene Karten-IDs und Mechanismusbezeichnungen belegen technisch unterscheidbare Ausgangspunkte, nicht die erzählerische Qualität oder semantische Originalität der Ergebnisse.
 
 Neu: `src/storyforge/stoffschmiede.py`, `tests/test_stoffschmiede.py`, diese Datei. Geändert: `src/storyforge/dialogue.py` (JSON-Schema ohne automatische Gesprächspersistenz), `src/storyforge/memory.py` (kreative Läufe), `src/storyforge/__init__.py`, `tests/test_memory.py`, `tests/test_dialogue.py`, `README.md`, `AGENTS.md`. Produktive Karten aus LIB-001 wurden nicht verändert.
 
-## Optionaler kreativer Ollama-Test unter Windows
+## Abschlussprüfung der zwölf Akzeptanzkriterien
 
-In PowerShell im Repository eine lokale Ollama-Installation starten und einen verfügbaren Modellnamen aus `ollama list` wählen. Ohne lokal verfügbares Modell erfordert `ollama pull <modellname>` einen Download. Anschließend:
+1. **Produktive Karten:** Alle 59 JSON-Karten werden vollständig geladen und validiert; M/N/D/A = 16/16/17/10, IDs und Querverweise gültig.
+2. **Mehrere Stoffkeime:** Zwei bis fünf synthetische Keime werden mit Fake-Provider in einem Aufruf erzeugt und strukturell geprüft.
+3. **Unterschiedliche Mechanismen:** Verschiedene ausgewählte Mechanismuskarten und eindeutige Mechanismusbezeichnungen werden erzwungen. Semantische Originalität bleibt redaktionell zu prüfen.
+4. **Kartenauswahl:** Auswahl auf höchstens fünf Karten begrenzt, deterministisch und mit Auswahlgründen dokumentiert. Fehlende Schlagworttreffer führen zu gekennzeichnetem Fallback.
+5. **Kontext und Manifest:** Übermittelte Karten-IDs/Versionen, Variante und Revision stimmen mit dem Manifest überein. Fremde Projekte und nicht gewählte Varianten sind ausgeschlossen.
+6. **Keine erfundenen Karten:** Unbekannte, doppelte oder falsch zugeordnete Karten-IDs werden abgelehnt. Bei leerer Bibliothek sind nur `null` und leere ID-Listen zulässig.
+7. **Optionale Reflexion:** Ohne `reflect` genau ein Modellaufruf; mit `reflect=True` genau ein zusätzlicher Aufruf. Ungültige Reflexion speichert keinen Lauf.
+8. **Persistenz:** Ein separater Python-Prozess öffnet die SQLite-Datenbank erneut und liest alle Kandidaten sowie das Manifest unverändert.
+9. **Isolation und Entscheidungen:** Projekt- und Variantenkontext bleiben getrennt; bestätigte Entscheidungen bleiben erhalten.
+10. **Kontrollierte Übernahme:** Auswahl erzeugt nur einen Entwurf. Erst ausdrückliche Autorfreigabe übernimmt ihn.
+11. **Fehler und Konflikte:** Ungültige Antwort, Timeout, Abbruch auch nach Modellantwort, falsche Ausgangsrevision und veralteter Entwurf ändern keinen Revisionskopf.
+12. **Regression:** Alle **60** automatisierten Tests bestehen. Damit ist die technische Funktionsfähigkeit mit Fake-Provider belegt; die kreative Qualität ist nicht nachgewiesen.
+
+## Direkt ausführbarer Ollama-Test unter Windows
+
+Ollama lokal starten und mit `ollama list` den Namen eines **bereits installierten** Modells ablesen. In PowerShell im Repository:
 
 ```powershell
 py -m venv .venv
-.venv\Scripts\python -m pip install -e ".[test]"
-$env:STORYFORGE_MODEL = "<installierter-modellname>"
-@'
-import os
-from storyforge import Memory, NarrativeLibrary, OllamaProvider, Stoffschmiede
-
-memory = Memory("local/stoffschmiede-smoke.sqlite3")
-project = memory.create_project("Synthetischer Hörspieltest")
-branch = memory.list_branches(project.id)[0]
-library = NarrativeLibrary.load("library/cards")
-forge = Stoffschmiede(memory, OllamaProvider(os.environ["STORYFORGE_MODEL"]), library)
-run = forge.develop(project.id, branch.id,
-                    "Entwickle drei Hörspielansätze um ein rätselhaftes Geräusch.",
-                    count=3, reflect=False)
-for seed in run.candidates:
-    print(seed.title, "–", seed.mechanism, "–", seed.mechanism_card_id)
-print("Karten:", run.manifest["cards"])
-print("Revisionskopf unverändert:", memory.list_branches(project.id)[0].head_id == branch.head_id)
-'@ | .venv\Scripts\python -
+.\.venv\Scripts\python.exe -m pip install -e ".[test]"
+.\.venv\Scripts\python.exe scripts\stoffschmiede_smoke.py --model "<installierter-modellname>"
 ```
 
-Der Smoke-Test nutzt nur synthetische lokale Projektdaten. Je nach Modell kann die strenge Strukturvalidierung eine Antwort ablehnen; das ist ein sichtbarer Modellbefund, kein Kanonwechsel. Für eine qualitative Bewertung Kandidaten redaktionell mit gewöhnlichem Chat und vergleichbarem Aufwand vergleichen. Der Test wurde hier nicht ausgeführt.
+Optional sind `--count 2` bis `--count 5`, `--reflect` und `--database <lokaler-pfad>`. Das Skript erstellt ausschließlich ein synthetisches Projekt, kontaktiert Ollama standardmäßig nur unter `127.0.0.1:11434`, gibt **sämtliche Felder jedes Stoffkeims** sowie ggf. die Reflexion lesbar aus und zeigt den unveränderten Revisionskopf. Die lokale SQLite-Datei unter `local/` ist ignoriert. Bei einem ungültigen JSON-Ergebnis meldet die Validierung einen Fehler; ein kanonischer Projektstand wird nicht verändert. `--help` wurde ausgeführt; ein echter Modelllauf war auf der Prüfmaschine ohne Ollama nicht möglich.
+
+## Dateien und Sicherheitsprüfung
+
+Neu in der Abschlussprüfung: `scripts/stoffschmiede_smoke.py`. Geändert: `src/storyforge/stoffschmiede.py`, `tests/test_stoffschmiede.py`, dieser Bericht. Die Tests prüfen zusätzlich Prozessneustart, tatsächliches Kartenmanifest, freie Promptformulierung, ungültige Mechanismuskartenzuordnung, Abbruch nach Antwort und vollständige Konsolenausgabe. Die Veröffentlichungsdateien enthalten nur Code, redaktionell bereitgestellte Karten, bereinigte Dokumentation und synthetische Testdaten; keine privaten Hörspielskripte, Projektdatenbanken oder Zugangsdaten.
 
 ## Offene Fragen
 
 - Exakte Schlagwörter und je eine Anfangskarte pro Kategorie sind ein bewusst einfacher Auswahlmechanismus. Kreative Eignung der Auswahl und echte Mechanismusvielfalt müssen mit Autorinnen und Autoren geprüft werden.
 - Bei einer fehlgeschlagenen optionalen Reflexion wird der gesamte unverbindliche Lauf nicht gespeichert; ein erneuter Aufruf ist nötig. Eine spätere Oberfläche kann eine getrennte Speicherauswahl anbieten.
 - Die Übernahme eines Kandidaten reduziert ihn auf das vorhandene SF-001-Ideenformat. Ob zusätzliche Felder verbindlich werden sollen, ist eine spätere fachliche Entscheidung.
-- SF-003C und SF-003D bleiben separate Aufträge. Kein Push oder Release in SF-003B.
+- SF-003C und SF-003D bleiben separate Aufträge. Kein Release in dieser Abschlussprüfung.
