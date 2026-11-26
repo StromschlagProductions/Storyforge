@@ -65,7 +65,7 @@ print(result.manifest["cards"])  # z. B. [{"id": "A01", "version": 1}]
 
 Neu: `src/storyforge/narrative_library.py`, vier ausdrücklich synthetische JSON-Karten in `examples/synthetic_cards/`, `tests/test_narrative_library.py`, diese Datei. Geändert: `src/storyforge/dialogue.py`, `src/storyforge/__init__.py`, `README.md`, `AGENTS.md`.
 
-`.venv/bin/python -m pytest -q`: **44 bestanden**, darunter alle bisherigen 30 Tests. Neue Tests prüfen Dateiladen, Hinzufügen und Aktualisieren ohne Codeänderung, Pflichtfelder und kaputtes JSON, doppelte IDs, Querverweise, unbekannte IDs, Filter, leere und reproduzierbare Auswahl, tatsächliche Kontextübergabe, Manifestversion, Projektisolation, unveränderte Revisionsköpfe und Kontextgrenze mit bestätigter Autorenentscheidung. Alle Testdaten sind synthetisch. Der CI-Lauf wird nach dem freigegebenen Push geprüft.
+`.venv/bin/python -m pytest -q`: **44 bestanden**, darunter alle bisherigen 30 Tests. Neue Tests prüfen Dateiladen, Hinzufügen und Aktualisieren ohne Codeänderung, Pflichtfelder und kaputtes JSON, doppelte IDs, Querverweise, unbekannte IDs, Filter, leere und reproduzierbare Auswahl, tatsächliche Kontextübergabe, Manifestversion, Projektisolation, unveränderte Revisionsköpfe und Kontextgrenze mit bestätigter Autorenentscheidung. Alle Testdaten sind synthetisch. Der [GitHub-Actions-Lauf](https://github.com/StromschlagProductions/Storyforge/actions/runs/45890993385) bestand unter Linux und Windows.
 
 ## Prüfung der neun Akzeptanzkriterien
 
