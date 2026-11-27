@@ -4,7 +4,7 @@ Deutschsprachige KI-gestützte Hörspiel-Autorenwerkstatt von Stromschlag Audio.
 
 Einstieg: [Masterplan](docs/MASTERPLAN.md), [P0-Auftragsplan](docs/tasks/P0_Auftragsplan.md), [Technische Architektur](docs/research/08_Technische_Architektur.md), [Arbeitsregeln](AGENTS.md).
 
-Status: SF-001 bis SF-003D und die lokale Autorenoberfläche SF-004 sind implementiert. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
+Status: SF-001 bis SF-004 und die Vorbereitung des kreativen Qualitätspiloten SF-005 sind implementiert. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
 
 ## Lokal starten
 
@@ -60,3 +60,5 @@ Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert
 ## Autorenoberfläche (SF-004)
 
 Unter Windows `Start_Storyforge.bat` doppelklicken. Für einen einfachen Test steht das vollständige [Windows-ZIP](downloads/Storyforge-SF004-Windows-Test.zip) mit [Kurzanleitung](WINDOWS_KURZANLEITUNG.txt) bereit. Die Anwendung öffnet sich lokal im Browser; Ollama wird nur für kreative Modellaufrufe benötigt. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
+
+Unter **Einstellungen** liegt die optionale [SF-005-Testwerkstatt](docs/tasks/SF-005_Ergebnis.md) mit sechs synthetischen Fällen und verblindeter Bewertung. Reale kreative Qualität wurde bislang nicht untersucht.

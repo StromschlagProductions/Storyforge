@@ -19,6 +19,9 @@ Daten und Datenschutz
 - Regelmäßig den Ordner local/ sichern. Er gehört nicht in ein öffentliches Repository.
 - Modellanfragen gehen ausschließlich an lokales Ollama unter 127.0.0.1:11434.
 - Ohne Ollama funktionieren Projekte, Varianten, Projektakte und Export.
+- Unter Einstellungen ist eine optionale Testwerkstatt mit sechs synthetischen Fällen.
+  Pilotdaten liegen getrennt in local/storyforge-pilot.sqlite3 und einer eigenen
+  Pilot-Core-Datenbank. Ergebnisse zuerst verblindet bewerten, dann auflösen.
 - Bei einer belegten Portnummer 8765 den anderen Dienst beenden oder
   aus einer Konsole .venv\Scripts\python.exe -m storyforge.web --port 8766 starten.
 

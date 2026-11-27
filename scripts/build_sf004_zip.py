@@ -20,6 +20,10 @@ def files():
     if len(cards) != 59:
         raise ValueError(f'59 Wissenskarten erwartet, gefunden: {len(cards)}')
     yield from cards
+    cases = sorted((ROOT / 'pilot' / 'cases').glob('T*.json'))
+    if len(cases) != 6:
+        raise ValueError(f'6 Pilotfälle erwartet, gefunden: {len(cases)}')
+    yield from cases
 
 
 def main():

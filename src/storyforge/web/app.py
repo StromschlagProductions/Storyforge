@@ -13,6 +13,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from storyforge.pilot import PilotConfig, PilotLab, PilotRating
 
 from storyforge import (Analysebereich, Arbeitsweise, Autorenredaktion, ConflictError, Dialogue,
                         FakeProvider, Geheimnislabor, Memory, NarrativeLibrary, NotFoundError, OllamaProvider,
@@ -47,10 +48,14 @@ class ApproveInput(BaseModel):
 
 
 class AppService:
-    def __init__(self, database: Path, library: Path = CARDS, provider_factory=OllamaProvider):
+    def __init__(self, database: Path, library: Path = CARDS, provider_factory=OllamaProvider,
+                 pilot_provider_factory=None, pilot_cases=None):
         self.memory = Memory(database)
         self.library = NarrativeLibrary.load(library)
         self.provider_factory = provider_factory
+        self.pilot = PilotLab(database.with_name(database.stem + "-pilot.sqlite3"),
+                              pilot_provider_factory or (lambda model, params: OllamaProvider(model, options=params)),
+                              cards=library, **({"cases": pilot_cases} if pilot_cases else {}))
         self.executor = ThreadPoolExecutor(max_workers=3, thread_name_prefix="storyforge")
         self.jobs: dict[str, dict] = {}
         self.lock = threading.Lock()
@@ -137,9 +142,31 @@ class AppService:
             if job["status"] == "läuft":
                 job["status"] = "abbruch angefordert"
 
+    def launch_pilot(self, group_id: str, arm: str, repetition: int) -> str:
+        job_id = str(uuid4())
+        cancel = threading.Event()
+        with self.lock:
+            self.jobs[job_id] = {"id": job_id, "status": "läuft", "cancel": cancel,
+                                 "result": None, "error": None}
 
-def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaProvider) -> FastAPI:
-    service = AppService(database, library, provider_factory)
+        def work():
+            try:
+                self.pilot.execute(group_id, arm, repetition, cancel)
+                with self.lock:
+                    self.jobs[job_id]["status"] = "fertig"
+                    self.jobs[job_id]["result"] = {"saved": True}
+            except Exception as error:
+                with self.lock:
+                    self.jobs[job_id]["status"] = "abgebrochen" if cancel.is_set() else "fehler"
+                    self.jobs[job_id]["error"] = f"{type(error).__name__}: {error}"
+
+        self.executor.submit(work)
+        return job_id
+
+
+def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaProvider,
+               pilot_provider_factory=None, pilot_cases=None) -> FastAPI:
+    service = AppService(database, library, provider_factory, pilot_provider_factory, pilot_cases)
     app = FastAPI(title="STORYFORGE", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.service = service
 
@@ -166,6 +193,10 @@ def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaPro
 
     @app.exception_handler(NotFoundError)
     async def missing(_request, error):
+        return PlainTextResponse(f"Nicht gefunden: {error}", status_code=404)
+
+    @app.exception_handler(KeyError)
+    async def missing_key(_request, error):
         return PlainTextResponse(f"Nicht gefunden: {error}", status_code=404)
 
     @app.exception_handler(PermissionError)
@@ -263,5 +294,40 @@ def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaPro
     def cancel(job_id: str):
         service.cancel(job_id)
         return service.state(job_id)
+
+    @app.get("/api/pilot/cases")
+    def pilot_cases_list():
+        return [case.model_dump() for case in service.pilot.cases.values()]
+
+    @app.post("/api/pilot/groups")
+    def pilot_group(config: PilotConfig):
+        return {"id": service.pilot.create_group(config)}
+
+    @app.post("/api/pilot/groups/{group_id}/runs")
+    def pilot_run(group_id: str, arm: str, repetition: int = 1):
+        service.pilot._group(group_id)
+        return {"id": service.launch_pilot(group_id, arm, repetition)}
+
+    @app.get("/api/pilot/groups/{group_id}/blind")
+    def pilot_blind(group_id: str):
+        return service.pilot.blind_runs(group_id)
+
+    @app.post("/api/pilot/ratings/{blind_id}")
+    def pilot_rating(blind_id: str, rating: PilotRating):
+        service.pilot.rate(blind_id, rating)
+        return {"saved": True}
+
+    @app.get("/api/pilot/groups/{group_id}/report")
+    def pilot_report(group_id: str, reveal: bool = False):
+        return service.pilot.report(group_id, reveal=reveal)
+
+    @app.get("/api/pilot/groups/{group_id}/export/{format}")
+    def pilot_export(group_id: str, format: str, reveal: bool = False):
+        if format == "json":
+            return PlainTextResponse(json.dumps(service.pilot.report(group_id, reveal=reveal),
+                                                ensure_ascii=False, indent=2), media_type="application/json")
+        if format == "markdown":
+            return PlainTextResponse(service.pilot.markdown(group_id, reveal=reveal), media_type="text/markdown")
+        raise ValueError("Unbekanntes Exportformat")
 
     return app
