@@ -64,3 +64,5 @@ Unter Windows `Start_Storyforge.bat` doppelklicken. Für einen einfachen Test st
 Unter **Einstellungen** liegt die optionale [SF-005-Testwerkstatt](docs/tasks/SF-005_Ergebnis.md) mit sechs synthetischen Fällen und verblindeter Bewertung. Für den ersten echten Autoren-Test gibt es eine [Kurzanleitung](SF-005_PILOT_KURZANLEITUNG.md). Der [P0-Stand](docs/tasks/SF-005_Ergebnis.md#p0-entwicklungsstand) trennt technische Umsetzung von offenen Praxisprüfungen. Reale kreative Qualität wurde bislang nicht untersucht.
 
 Prozessbesitz, Fehlermeldungen und die vorbereitete Windows-Distribution für alpha.2 sind im [Bericht zum Ollama-Komfort-Patch](docs/tasks/Ollama_Komfortpatch_Ergebnis.md) dokumentiert. Ein GitHub-Release für alpha.2 ist noch nicht erstellt.
+
+Für langsame lokale Modelle und strukturierte Antworten beschreibt [ALPHA-2 Modellkommunikation](docs/tasks/ALPHA2_Modellkommunikation_Ergebnis.md) die Timeout- und Ollama-Limits sowie eine datensparsame lokale Fehlerdiagnose. Der konkrete Gemma-Fehler auf dem Autoren-PC muss mit diesen Diagnosen erneut beobachtet werden.

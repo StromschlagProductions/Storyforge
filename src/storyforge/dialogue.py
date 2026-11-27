@@ -11,7 +11,7 @@ from .memory import ConflictError, Memory, NotFoundError
 from .models import Idea, Snapshot
 from .narrative_library import CardSelection
 from .providers import (InvalidModelResponse, ModelCancelled, ModelProvider,
-                        ModelRequest, ModelResponse)
+                        ModelRequest, ModelResponse, local_timeout)
 
 
 class ContextLimitError(ValueError):
@@ -35,11 +35,14 @@ class DialogueResult:
     duration_seconds: float | None
     prompt_tokens: int | None
     output_tokens: int | None
+    wall_seconds: float | None = None
+    generation_tokens_per_second: float | None = None
 
 
 class Dialogue:
     def __init__(self, memory: Memory, provider: ModelProvider, *, history_limit: int = 12,
-                 max_context_chars: int = 30_000, timeout_seconds: float = 60.0):
+                 max_context_chars: int = 30_000, timeout_seconds: float | None = None):
+        timeout_seconds = local_timeout() if timeout_seconds is None else timeout_seconds
         if history_limit < 0 or max_context_chars <= 0 or timeout_seconds <= 0:
             raise ValueError("Ungültige Kontext- oder Zeitgrenze")
         self.memory = memory
@@ -116,10 +119,15 @@ class Dialogue:
             raise ModelCancelled("Anfrage abgebrochen")
         if not response.content.strip():
             raise InvalidModelResponse("Leere Modellantwort")
+        content = response.content
+        if format_schema is not None or structured:
+            stripped = content.strip()
+            if stripped.startswith("```json\n") and stripped.endswith("\n```"):
+                content = stripped[8:-4].strip()  # Nur ein vollständiger JSON-Codeblock.
         proposal_id = None
         if structured:
             try:
-                change = ProposedChange.model_validate_json(response.content)
+                change = ProposedChange.model_validate_json(content)
             except (ValidationError, ValueError) as error:
                 raise InvalidModelResponse("Ungültiger Änderungsvorschlag") from error
             if change.base_revision_id != revision.id:
@@ -141,8 +149,10 @@ class Dialogue:
             except ValueError as error:
                 raise InvalidModelResponse("Ungültiger Änderungsvorschlag") from error
         if persist:
-            self.memory.save_exchange(project_id, branch_id, revision.id, task, response.content,
+            self.memory.save_exchange(project_id, branch_id, revision.id, task, content,
                                       manifest, response.model, proposal_id)
-        return DialogueResult(answer=response.content, model=response.model, manifest=manifest,
+        return DialogueResult(answer=content, model=response.model, manifest=manifest,
                               proposal_id=proposal_id, duration_seconds=response.duration_seconds,
-                              prompt_tokens=response.prompt_tokens, output_tokens=response.output_tokens)
+                              prompt_tokens=response.prompt_tokens, output_tokens=response.output_tokens,
+                              wall_seconds=response.wall_seconds,
+                              generation_tokens_per_second=response.generation_tokens_per_second)

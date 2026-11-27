@@ -125,7 +125,7 @@ class Verfahrensergebnis:
 
 class Autorenredaktion:
     def __init__(self, memory: Memory, provider: ModelProvider, library: NarrativeLibrary,
-                 *, max_context_chars: int = 30_000, timeout_seconds: float = 60.0):
+                 *, max_context_chars: int = 30_000, timeout_seconds: float | None = None):
         self.memory = memory
         self.library = library
         self.dialogue = Dialogue(memory, provider, max_context_chars=max_context_chars,

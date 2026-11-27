@@ -121,3 +121,60 @@ def test_unvollstaendige_ollama_antwort_wird_abgelehnt():
                            "done": False}) as server:
         with pytest.raises(InvalidModelResponse):
             OllamaProvider("test", base_url=server.url).generate(ModelRequest(messages=[]))
+
+
+@pytest.mark.parametrize(("body", "meldung"), [
+    (b"kein JSON", "HTTP-JSON"),
+    ({"model": "gemma", "message": {"content": ""}, "done": True}, "leeren Antwortinhalt"),
+    ({"model": "gemma", "message": {"content": "", "thinking": "privater Gedanke"},
+      "done": True}, "nur Thinking-Text"),
+    ({"model": "gemma", "message": {"content": "teil"}, "done": False}, "nicht abgeschlossen"),
+    ({"model": "gemma", "message": {"content": "teil"}, "done": True,
+      "done_reason": "length"}, "Ausgabelimit"),
+    ({"model": "gemma", "done": True}, "message-Objekt"),
+])
+def test_ollama_diagnose_ohne_rohen_inhalt(body, meldung):
+    with OllamaTestServer(body) as server:
+        with pytest.raises(InvalidModelResponse, match=meldung):
+            OllamaProvider("gemma", base_url=server.url).generate(ModelRequest(messages=[]))
+
+
+def test_gemma_artige_strukturantwort_und_generierungsgeschwindigkeit():
+    body = {"model": "gemma:synthetisch", "message": {"role": "assistant", "content": '{"ideen":[]}'},
+            "done": True, "done_reason": "stop", "total_duration": 4_000_000_000,
+            "prompt_eval_count": 100, "eval_count": 50, "eval_duration": 2_000_000_000}
+    with OllamaTestServer(body) as server:
+        provider = OllamaProvider("gemma:synthetisch", base_url=server.url)
+        reply = provider.generate(ModelRequest(messages=[], format_schema={"type": "object"}))
+        assert reply.content == '{"ideen":[]}'
+        assert reply.generation_tokens_per_second == 25
+        assert reply.wall_seconds is not None and reply.wall_seconds >= 0
+        assert server.requests[0][1]["format"] == {"type": "object"}
+
+
+def test_lokale_diagnose_ohne_prompt_antwort_und_thinking(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("STORYFORGE_MODEL_DIAGNOSTICS", "1")
+    private = "VERTRAULICHER SYNTHETISCHER TEXT"
+    body = {"model": "gemma", "message": {"content": "", "thinking": private}, "done": True,
+            "eval_count": 9}
+    with OllamaTestServer(body) as server:
+        with pytest.raises(InvalidModelResponse):
+            OllamaProvider("gemma", base_url=server.url).generate(
+                ModelRequest(messages=[{"role": "user", "content": private}]))
+    log = (tmp_path / "local/ollama-diagnostics.jsonl").read_text(encoding="utf-8")
+    assert private not in log
+    assert json.loads(log)["status"] == "thinking_only"
+
+
+def test_konfigurierbare_ollama_limits_und_timeout(monkeypatch):
+    from storyforge.providers import local_timeout
+    monkeypatch.setenv("STORYFORGE_MODEL_TIMEOUT_SECONDS", "480")
+    monkeypatch.setenv("STORYFORGE_OLLAMA_NUM_CTX", "8192")
+    monkeypatch.setenv("STORYFORGE_OLLAMA_NUM_PREDICT", "4096")
+    assert local_timeout() == 480
+    provider = OllamaProvider("gemma")
+    assert provider.options == {"num_ctx": 8192, "num_predict": 4096}
+    monkeypatch.setenv("STORYFORGE_OLLAMA_NUM_CTX", "unzulässig")
+    with pytest.raises(ValueError, match="NUM_CTX"):
+        OllamaProvider("gemma")

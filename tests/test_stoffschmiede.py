@@ -8,7 +8,7 @@ from uuid import uuid4
 import pytest
 
 from storyforge import (ConflictError, Decision, FakeProvider, Idea, InvalidModelResponse,
-                        Memory, ModelCancelled, ModelTimeout, NarrativeLibrary, Snapshot,
+                        Memory, ModelCancelled, ModelResponse, ModelTimeout, NarrativeLibrary, Snapshot,
                         Stoffschmiede)
 
 
@@ -95,6 +95,43 @@ def test_fallback_und_optionale_reflexion(tmp_path):
     assert len(provider.requests) == 2
     assert run.reflection.strengths == ["Klarer Kontrast"]
     assert memory.get_creative_run(run.id)["reflection"] == reflection
+    assert memory.list_branches(project.id)[0].head_id == branch.head_id
+
+
+def test_gemma_json_codeblock_wird_einmal_deterministisch_bereinigt(tmp_path, monkeypatch):
+    memory, project, branch, library = _setup(tmp_path)
+    ids = [card.id for card in Stoffschmiede(memory, FakeProvider([]), library).select_cards("Klang").cards]
+    answer = "```json\n" + _response(branch.head_id, ids) + "\n```"
+    provider = FakeProvider([ModelResponse(content=answer, model="gemma-synthetisch",
+                                           duration_seconds=180, prompt_tokens=850,
+                                           output_tokens=1200, wall_seconds=182,
+                                           generation_tokens_per_second=8)])
+    monkeypatch.setenv("STORYFORGE_MODEL_TIMEOUT_SECONDS", "480")
+    run = Stoffschmiede(memory, provider, library).develop(project.id, branch.id, "Klang")
+    assert len(provider.requests) == 1
+    assert provider.requests[0].timeout_seconds == 480
+    metrics = memory.get_creative_run(run.id)["metrics"]["generation"]
+    assert (metrics["duration_seconds"], metrics["wall_seconds"], metrics["prompt_tokens"],
+            metrics["output_tokens"], metrics["generation_tokens_per_second"]) == (180, 182, 850, 1200, 8)
+    assert memory.list_branches(project.id)[0].head_id == branch.head_id
+
+
+def test_schemafehler_benennt_feld_ohne_antwortinhalt(tmp_path):
+    memory, project, branch, library = _setup(tmp_path)
+    ids = [card.id for card in Stoffschmiede(memory, FakeProvider([]), library).select_cards("Klang").cards]
+    payload = json.loads(_response(branch.head_id, ids))
+    payload["candidates"][0]["premise"] = ""
+    with pytest.raises(InvalidModelResponse, match=r"candidates\.0\.premise"):
+        Stoffschmiede(memory, FakeProvider([json.dumps(payload)]), library).develop(
+            project.id, branch.id, "Klang")
+    assert memory.list_branches(project.id)[0].head_id == branch.head_id
+
+
+def test_ungueltiges_stoffkeim_json_wird_getrennt_gemeldet(tmp_path):
+    memory, project, branch, library = _setup(tmp_path)
+    with pytest.raises(InvalidModelResponse, match="kein gültiges JSON"):
+        Stoffschmiede(memory, FakeProvider(["{unvollständig"]), library).develop(
+            project.id, branch.id, "Klang")
     assert memory.list_branches(project.id)[0].head_id == branch.head_id
 
 

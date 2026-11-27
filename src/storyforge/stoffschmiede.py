@@ -85,7 +85,7 @@ class StoffschmiedeErgebnis:
 
 class Stoffschmiede:
     def __init__(self, memory: Memory, provider: ModelProvider, library: NarrativeLibrary,
-                 *, max_context_chars: int = 30_000, timeout_seconds: float = 60.0):
+                 *, max_context_chars: int = 30_000, timeout_seconds: float | None = None):
         self.memory = memory
         self.library = library
         self.dialogue = Dialogue(memory, provider, max_context_chars=max_context_chars,
@@ -145,8 +145,14 @@ class Stoffschmiede:
                                    persist=False, cancel=cancel)
         try:
             answer = _StoffAntwort.model_validate_json(result.answer)
-        except (ValidationError, ValueError) as error:
-            raise InvalidModelResponse("Ungültige Stoffkeim-Antwort") from error
+        except ValidationError as error:
+            first = error.errors()[0]
+            if first["type"] == "json_invalid":
+                raise InvalidModelResponse("Stoffkeim-Antwort ist kein gültiges JSON") from error
+            location = ".".join(str(part) for part in first["loc"])
+            raise InvalidModelResponse(f"Stoffkeim-Schemafehler bei {location}: {first['type']}") from error
+        except ValueError as error:
+            raise InvalidModelResponse("Stoffkeim-Antwort ist kein gültiges JSON") from error
         if answer.base_revision_id != UUID(result.manifest["revision_id"]):
             raise ConflictError("Stoffkeime beziehen sich auf eine andere Revision")
         if len(answer.candidates) != count:
@@ -184,11 +190,15 @@ class Stoffschmiede:
             except (ValidationError, ValueError) as error:
                 raise InvalidModelResponse("Ungültige Reflexion") from error
             reflection_metrics = {"model": reflected.model, "duration_seconds": reflected.duration_seconds,
-                                  "prompt_tokens": reflected.prompt_tokens, "output_tokens": reflected.output_tokens}
+                                  "wall_seconds": reflected.wall_seconds,
+                                  "prompt_tokens": reflected.prompt_tokens, "output_tokens": reflected.output_tokens,
+                                  "generation_tokens_per_second": reflected.generation_tokens_per_second}
         manifest = {**result.manifest, "procedure": "V02", "mechanism_assignments": assignments}
         metrics = {"generation": {"duration_seconds": result.duration_seconds,
+                                  "wall_seconds": result.wall_seconds,
                                   "prompt_tokens": result.prompt_tokens,
-                                  "output_tokens": result.output_tokens}}
+                                  "output_tokens": result.output_tokens,
+                                  "generation_tokens_per_second": result.generation_tokens_per_second}}
         if reflection_metrics is not None:
             metrics["reflection"] = reflection_metrics
         if cancel is not None and cancel.is_set():

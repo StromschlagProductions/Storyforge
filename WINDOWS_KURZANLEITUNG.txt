@@ -24,6 +24,17 @@ Daten und Datenschutz
 - Beim Start prüft STORYFORGE Ollama, startet es bei Bedarf ohne eigenes
   Konsolenfenster und wartet auf die Modellliste. Ist Ollama nicht installiert,
   erscheint eine verständliche Meldung in der Oberfläche.
+- Langsame Modelle erhalten standardmäßig 300 Sekunden je Modellaufruf.
+  Anpassung in einer Eingabeaufforderung vor dem Launcher, zum Beispiel:
+  set STORYFORGE_MODEL_TIMEOUT_SECONDS=480
+  Start_Storyforge.bat
+  Optional lassen sich STORYFORGE_OLLAMA_NUM_CTX und
+  STORYFORGE_OLLAMA_NUM_PREDICT als positive ganze Zahlen setzen.
+  Die Kontextgrenze der Projektzusammenstellung beträgt 30.000 Zeichen;
+  Ollamas Token-Kontextfenster ist eine davon getrennte Grenze.
+- Bei wiederholten Fehlern kann STORYFORGE_MODEL_DIAGNOSTICS=1 gesetzt werden.
+  Dann entsteht lokal local/ollama-diagnostics.jsonl mit Status, Laufzeiten
+  und Tokenzahlen, aber ohne Prompt- oder Antworttext. Die Datei privat halten.
 - Unter Einstellungen ist eine optionale Testwerkstatt mit sechs synthetischen Fällen.
   Pilotdaten liegen getrennt in local/storyforge-pilot.sqlite3 und einer eigenen
   Pilot-Core-Datenbank. Nach den Läufen die Bewertungsansicht öffnen,
