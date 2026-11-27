@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "storyforge"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Lokales Projektgedächtnis für Hörspiel-Stoffentwicklung"
 requires-python = ">=3.10"
 dependencies = ["pydantic>=2,<3", "fastapi>=0.115,<1", "uvicorn>=0.30,<1"]

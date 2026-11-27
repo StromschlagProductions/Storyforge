@@ -4,7 +4,7 @@ Deutschsprachige KI-gestützte Hörspiel-Autorenwerkstatt von Stromschlag Audio.
 
 Einstieg: [Masterplan](docs/MASTERPLAN.md), [P0-Auftragsplan](docs/tasks/P0_Auftragsplan.md), [Technische Architektur](docs/research/08_Technische_Architektur.md), [Arbeitsregeln](AGENTS.md).
 
-Status: SF-001 bis SF-004 und der technische Qualitätspilot SF-005 sind implementiert. Die Versionsbezeichnung [STORYFORGE 0.1.0-alpha.1](docs/releases/STORYFORGE_0.1.0-alpha.1.md) ist vorbereitet; ein Release ist noch nicht erstellt. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
+Status: SF-001 bis SF-005 sind technisch implementiert; der Komfort-Patch zur lokalen Ollama-Verwaltung ist enthalten. [0.1.0-alpha.2](docs/releases/STORYFORGE_0.1.0-alpha.2.md) ist zur Veröffentlichung vorbereitet. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
 
 ## Lokal starten
 
@@ -59,6 +59,8 @@ Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert
 
 ## Autorenoberfläche (SF-004)
 
-Unter Windows `Start_Storyforge.bat` doppelklicken. Für einen einfachen Test steht das vollständige [Windows-ZIP](downloads/Storyforge-SF004-Windows-Test.zip) mit [Kurzanleitung](WINDOWS_KURZANLEITUNG.txt) bereit. Die Anwendung öffnet sich lokal im Browser; Ollama wird nur für kreative Modellaufrufe benötigt. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
+Unter Windows `Start_Storyforge.bat` doppelklicken. Für einen einfachen Test steht das vollständige [Windows-ZIP](downloads/STORYFORGE-0.1.0-alpha.2-Windows.zip) mit [Kurzanleitung](WINDOWS_KURZANLEITUNG.txt) bereit. Die Anwendung öffnet sich lokal im Browser, prüft Ollama, startet es bei Bedarf im Hintergrund und zeigt installierte Modelle. Mit „STORYFORGE beenden“ werden der lokale Server und nur ein selbst gestarteter Ollama-Prozess beendet. Ohne Ollama bleiben Projekte und Exporte nutzbar. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
 
 Unter **Einstellungen** liegt die optionale [SF-005-Testwerkstatt](docs/tasks/SF-005_Ergebnis.md) mit sechs synthetischen Fällen und verblindeter Bewertung. Für den ersten echten Autoren-Test gibt es eine [Kurzanleitung](SF-005_PILOT_KURZANLEITUNG.md). Der [P0-Stand](docs/tasks/SF-005_Ergebnis.md#p0-entwicklungsstand) trennt technische Umsetzung von offenen Praxisprüfungen. Reale kreative Qualität wurde bislang nicht untersucht.
+
+Prozessbesitz, Fehlermeldungen und die vorbereitete Windows-Distribution für alpha.2 sind im [Bericht zum Ollama-Komfort-Patch](docs/tasks/Ollama_Komfortpatch_Ergebnis.md) dokumentiert. Ein GitHub-Release für alpha.2 ist noch nicht erstellt.

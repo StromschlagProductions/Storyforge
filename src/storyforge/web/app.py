@@ -2,8 +2,6 @@
 
 import json
 import threading
-import urllib.error
-import urllib.request
 from urllib.parse import urlsplit
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -18,6 +16,7 @@ from storyforge.pilot import PilotConfig, PilotLab, PilotRating
 from storyforge import (Analysebereich, Arbeitsweise, Autorenredaktion, ConflictError, Dialogue,
                         FakeProvider, Geheimnislabor, Memory, NarrativeLibrary, NotFoundError, OllamaProvider,
                         Operation, Quelle, Snapshot, Stoffschmiede)
+from .ollama_service import OllamaService, local_models
 
 STATIC = Path(__file__).parent / "static"
 CARDS = Path.cwd() / "library" / "cards"
@@ -165,7 +164,8 @@ class AppService:
 
 
 def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaProvider,
-               pilot_provider_factory=None, pilot_cases=None) -> FastAPI:
+               pilot_provider_factory=None, pilot_cases=None, ollama_service: OllamaService | None = None,
+               shutdown_callback=None) -> FastAPI:
     service = AppService(database, library, provider_factory, pilot_provider_factory, pilot_cases)
     app = FastAPI(title="STORYFORGE", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.service = service
@@ -275,12 +275,22 @@ def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaPro
 
     @app.get("/api/models")
     def models():
+        if ollama_service is not None:
+            return ollama_service.status()
         try:
-            with urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=2) as response:
-                data = json.load(response)
-            return {"online": True, "models": [m["name"] for m in data.get("models", [])]}
-        except (OSError, ValueError, KeyError, urllib.error.URLError):
+            return {"online": True, "models": local_models()}
+        except (OSError, ValueError, KeyError, TypeError):
             return {"online": False, "models": []}
+
+    @app.post("/api/shutdown")
+    def shutdown():
+        if shutdown_callback is None:
+            return PlainTextResponse("Beenden nur im gestarteten STORYFORGE verfügbar", status_code=503)
+        with service.lock:
+            for job in service.jobs.values():
+                job["cancel"].set()
+        shutdown_callback()
+        return {"status": "STORYFORGE wird beendet"}
 
     @app.post("/api/jobs")
     def start_job(data: JobInput):

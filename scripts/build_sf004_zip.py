@@ -4,8 +4,8 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / 'downloads' / 'Storyforge-SF004-Windows-Test.zip'
-PREFIX = 'Storyforge-SF004-Windows-Test/'
+TARGET = ROOT / 'downloads' / 'STORYFORGE-0.1.0-alpha.2-Windows.zip'
+PREFIX = 'STORYFORGE-0.1.0-alpha.2-Windows/'
 
 
 def files():
