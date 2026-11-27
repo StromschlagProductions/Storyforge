@@ -8,6 +8,8 @@ Voraussetzungen
   Ollama und Sprachmodelle sind NICHT Bestandteil dieses ZIP-Archivs.
 
 Start
+Bei einem Update von ALPHA 1 zuerst UPDATE_VON_ALPHA1.txt lesen und den
+gesamten privaten local/-Ordner sichern und in den neuen Ordner kopieren.
 1. Das gesamte ZIP-Archiv in einen eigenen Ordner entpacken.
 2. Start_Storyforge.bat doppelklicken.
 3. Beim ersten Start installiert der Launcher die Python-Abhängigkeiten in .venv.
@@ -52,5 +54,7 @@ Daten und Datenschutz
 - Bei einer belegten Portnummer 8765 den anderen Dienst beenden oder
   aus einer Konsole .venv\Scripts\python.exe -m storyforge.web --port 8766 starten.
 
-Die Oberfläche ist ein technischer Teststand. Ein echter Windows- und Ollama-Test
-auf dem Autoren-PC steht noch aus. Kein Nachweis kreativer Qualität.
+Die Oberfläche ist ein technischer Teststand. Der Autor berichtete einen
+funktionierenden V01-/Gemma-Lauf auf Windows; der Start dieses finalen ZIP
+und V02 mit Gemma sind damit noch nicht abschließend geprüft. Kein Nachweis
+kreativer Qualität.

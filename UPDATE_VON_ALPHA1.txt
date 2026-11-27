@@ -1,0 +1,33 @@
+STORYFORGE – Update von 0.1.0-alpha.1 auf 0.1.0-alpha.2
+======================================================
+
+Wichtig: Deine Geschichten liegen im Ordner local/ der bisherigen
+STORYFORGE-Installation. Das neue ZIP enthält keine Projektdaten.
+
+1. ALPHA 1 in der Browseransicht mit "STORYFORGE beenden" schließen.
+   Falls dieser Knopf in deiner ALPHA-1-Fassung fehlt, die Launcher-Konsole
+   schließen und warten, bis STORYFORGE vollständig beendet ist.
+2. Den gesamten bisherigen Ordner local/ als Sicherheitskopie an einen
+   privaten Ort kopieren. Er enthält auch Daten der optionalen Testwerkstatt.
+   Die Kopie nicht in ein öffentliches Repository hochladen.
+3. STORYFORGE-0.1.0-alpha.2-Windows.zip in einen NEUEN Ordner entpacken.
+4. Den GESAMTEN bisherigen Ordner local/ in den entpackten ALPHA-2-Ordner
+   kopieren, direkt neben Start_Storyforge.bat. Nicht nur einzelne .sqlite3-
+   Dateien auswählen. Wenn local/ im neuen Ordner noch nicht existiert,
+   den Ordner einfach dorthin kopieren.
+5. Die alte .venv/ NICHT mitkopieren. Python 3.10+ muss installiert sein.
+   Start_Storyforge.bat doppelklicken; beim ersten Start richtet es die
+   Python-Abhängigkeiten für den neuen Ordner ein (Internet nötig).
+6. Im Browser Projekte, Varianten, Gesprächsverlauf, Projektakte und
+   gespeicherte kreative Ergebnisse kontrollieren. Erst nach dieser
+   Kontrolle die alte Installation gegebenenfalls entfernen. Die private
+   Sicherheitskopie aufbewahren.
+
+Bei Problemen: ALPHA 2 mit "STORYFORGE beenden" schließen und die alte
+Installation mit dem unveränderten local/-Ordner wieder starten. Die
+Sicherheitskopie kann den bisherigen local/-Ordner ersetzen, falls nötig.
+
+Ollama und Sprachmodelle gehören nicht zum ZIP und müssen separat
+installiert sein. ALPHA 2 versucht Ollama lokal selbst zu starten.
+Ein echter Windows-Test dieses finalen Pakets sowie die erneute Prüfung
+des beobachteten V02-/Gemma-Fehlers stehen noch aus.
