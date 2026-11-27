@@ -14,7 +14,7 @@ jobs:
         with:
           ref: v0.1.0-alpha.2
       - name: Archiv und Pruefsumme pruefen
-        run: sha256sum -c downloads/STORYFORGE-0.1.0-alpha.2-Windows.zip.sha256
+        run: cd downloads && sha256sum -c STORYFORGE-0.1.0-alpha.2-Windows.zip.sha256
       - name: Release und Assets fertigstellen
         env:
           GH_TOKEN: ${{ github.token }}
