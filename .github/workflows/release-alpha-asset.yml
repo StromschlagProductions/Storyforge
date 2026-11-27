@@ -1,0 +1,36 @@
+name: Einmaliger Alpha-Asset-Upload
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.repository == 'StromschlagProductions/Storyforge'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-alpha.1
+      - name: Archiv vom Release-Tag prüfen
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp downloads/Storyforge-SF004-Windows-Test.zip "$RUNNER_TEMP/STORYFORGE-0.1.0-alpha.1-Windows.zip"
+          printf '%s  %s\n' 'b3c8fc858b14949702a8a10ef420eb7c47f1cb3b18a7f618676df89a8ad1cda5' 'STORYFORGE-0.1.0-alpha.1-Windows.zip' > "$RUNNER_TEMP/STORYFORGE-0.1.0-alpha.1-Windows.zip.sha256"
+          cd "$RUNNER_TEMP"
+          sha256sum -c STORYFORGE-0.1.0-alpha.1-Windows.zip.sha256
+      - name: ZIP und SHA-256 an den Entwurf anhängen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v0.1.0-alpha.1 \
+            "$RUNNER_TEMP/STORYFORGE-0.1.0-alpha.1-Windows.zip" \
+            "$RUNNER_TEMP/STORYFORGE-0.1.0-alpha.1-Windows.zip.sha256" \
+            --repo "$GITHUB_REPOSITORY" --clobber
+      - name: Geprüftes Prerelease veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit v0.1.0-alpha.1 --repo "$GITHUB_REPOSITORY" --draft=false --prerelease
