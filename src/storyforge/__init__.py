@@ -7,10 +7,15 @@ from .narrative_library import CardSelection, KnowledgeCard, NarrativeLibrary
 from .stoffschmiede import Reflexion, Stoffkeim, Stoffschmiede, StoffschmiedeErgebnis
 from .geheimnislabor import (Arbeitsweise, Beobachtung, GeheimnisErgebnis, Geheimnislabor,
                             Geheimnismodell, Hypothese, Interpretation, MatrixEintrag, Schutzpruefung)
+from .autorenredaktion import (Alternative, Analysebereich, Autorenredaktion, Befund,
+                               Kritikantwort, Mutationsantwort, Operation, Quelle,
+                               Schutzbefund, Verfahrensergebnis)
 from .providers import (FakeProvider, InvalidModelResponse, ModelCancelled, ModelError,
                         ModelResponse, ModelTimeout, OllamaProvider)
 
-__all__ = ["Arbeitsweise", "Beobachtung", "GeheimnisErgebnis", "Geheimnislabor",
+__all__ = ["Alternative", "Analysebereich", "Autorenredaktion", "Befund", "Kritikantwort",
+           "Mutationsantwort", "Operation", "Quelle", "Schutzbefund", "Verfahrensergebnis",
+           "Arbeitsweise", "Beobachtung", "GeheimnisErgebnis", "Geheimnislabor",
            "Geheimnismodell", "Hypothese", "Interpretation", "MatrixEintrag", "Schutzpruefung",
            "CardSelection", "ConflictError", "ContextLimitError", "Decision", "Dialogue",
            "DialogueResult", "KnowledgeCard", "NarrativeLibrary",
