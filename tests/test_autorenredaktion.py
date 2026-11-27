@@ -158,3 +158,74 @@ def test_nicht_angeforderter_kritikbereich_und_schutzkonflikt(tmp_path):
         Autorenredaktion(memory, FakeProvider([]), library).mutate(
             project.id, branch.id, "Wandel", source, operation=Operation.FREI,
             erhalten=("Ton",), gezielt_aendern=("Ton",))
+
+
+def test_kombinierte_kritik_und_promptfreiheit(tmp_path):
+    memory, project, branch, library = setup(tmp_path)
+    payload = json.loads(critique())
+    payload["befunde"].append({**payload["befunde"][0], "bereich": Analysebereich.AKUSTIK.value,
+                              "art": "widerspruch", "problem": "Quelle und Hörperspektive kollidieren"})
+    provider = FakeProvider([json.dumps(payload, ensure_ascii=False)])
+    result = Autorenredaktion(memory, provider, library).critique(
+        project.id, branch.id, "Prüfe Logik und Klang", Quelle(art="frei", beschreibung="Ein Testton."),
+        bereiche=(Analysebereich.KAUSALITAET, Analysebereich.AKUSTIK), card_limit=2)
+    assert {b.bereich for b in result.result.befunde} == {Analysebereich.KAUSALITAET, Analysebereich.AKUSTIK}
+    assert {b.art for b in result.result.befunde} == {"interpretation", "widerspruch"}
+    assert all(b.begruendung and b.materialbezug and b.verbesserung and b.nachteile and b.unsicherheit
+               for b in result.result.befunde)
+    assert len(provider.requests) == 1
+    prompt = provider.requests[0].messages[-1]["content"]
+    assert "Erzwinge keine Probleme" in prompt and "keine Pflichtregeln" in prompt
+    assert "keine Kreativitätsnote" in prompt
+    context = json.loads(provider.requests[0].messages[0]["content"].split("Projektkontext:\n", 1)[1])
+    assert [(c["id"], c["version"]) for c in context["wissenskarten"]] == [
+        (c["id"], c["version"]) for c in result.manifest["cards"]]
+    assert len(result.manifest["cards"]) <= 2
+
+
+def test_schutzverletzung_bleibt_sichtbar_und_widerspruch_wird_abgelehnt(tmp_path):
+    memory, project, branch, library = setup(tmp_path)
+    source = Quelle(art="frei", beschreibung="Ein synthetischer Klang.")
+    payload = json.loads(mutation(Operation.INVERSION, ("Ton bleibt", "Figur bleibt")))
+    payload["alternativen"][0]["schutzpruefungen"][0]["status"] = "verletzt"
+    payload["alternativen"][0]["bewahrte_elemente"].remove("Ton bleibt")
+    payload["alternativen"][0]["veraenderte_elemente"].append("Ton bleibt")
+    editor = Autorenredaktion(memory, FakeProvider([json.dumps(payload)]), library)
+    result = editor.mutate(project.id, branch.id, "Inversion", source, operation=Operation.INVERSION,
+                           erhalten=("Ton bleibt", "Figur bleibt"))
+    assert result.result.alternativen[0].schutzpruefungen[0].status == "verletzt"
+    assert memory.list_branches(project.id)[0].head_id == branch.head_id
+    payload["alternativen"][0]["bewahrte_elemente"].append("Ton bleibt")
+    with pytest.raises(InvalidModelResponse):
+        Autorenredaktion(memory, FakeProvider([json.dumps(payload)]), library).mutate(
+            project.id, branch.id, "Inversion", source, operation=Operation.INVERSION,
+            erhalten=("Ton bleibt", "Figur bleibt"))
+
+
+def test_abbruch_nach_antwort_und_revisionswechsel(tmp_path):
+    memory, project, branch, library = setup(tmp_path)
+    source = Quelle(art="frei", beschreibung="Ein Testton.")
+    cancel = Event()
+
+    class CancellingProvider(FakeProvider):
+        def generate(self, request, event=None):
+            response = super().generate(request, event)
+            cancel.set()
+            return response
+
+    with pytest.raises(ModelCancelled):
+        Autorenredaktion(memory, CancellingProvider([critique()]), library).critique(
+            project.id, branch.id, "Kritik", source, cancel=cancel)
+
+    class ChangingProvider(FakeProvider):
+        def generate(self, request, event=None):
+            response = super().generate(request, event)
+            memory.approve(memory.propose(branch.id, branch.head_id, Snapshot(), "Parallel").id,
+                           approved_by="Autor", explicit_approval=True)
+            return response
+
+    with pytest.raises(ConflictError):
+        Autorenredaktion(memory, ChangingProvider([mutation(Operation.FREI)]), library).mutate(
+            project.id, branch.id, "Wandel", source, operation=Operation.FREI)
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT COUNT(*) FROM creative_runs").fetchone()[0] == 0

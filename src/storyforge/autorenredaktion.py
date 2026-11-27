@@ -193,6 +193,10 @@ class Autorenredaktion:
             for alt in result.alternativen:
                 if {s.element for s in alt.schutzpruefungen} != set(protected) or len(alt.schutzpruefungen) != len(protected):
                     raise InvalidModelResponse("Geschützte Elemente nicht einzeln geprüft")
+                if any((s.status == "bewahrt" and s.element in alt.veraenderte_elemente) or
+                       (s.status == "verletzt" and s.element in alt.bewahrte_elemente)
+                       for s in alt.schutzpruefungen):
+                    raise InvalidModelResponse("Schutzprüfung widerspricht der Elementliste")
                 if alt.operation != metadata["operation"]:
                     raise InvalidModelResponse("Falsche kreative Operation")
                 used = alt.verwendete_karten_ids

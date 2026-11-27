@@ -24,7 +24,7 @@ Die Schutzmenge ist die Vereinigung aus `erhalten` und allen `protected_elements
 
 ## Tests und Dateien
 
-`.venv/bin/python -m pytest -q`: **91 bestanden**, einschließlich aller bisherigen 76. Neue Fake-Provider-Tests decken zehn Operationen, freie und bestätigte Quellen, gespeicherte Quellen, ausgewählte Kritikbereiche, Stärken ohne erzwungene Befunde, Karten-/Manifestabgleich, Schutzkonflikte, fehlende Schutzprüfungen, ungültige Karten und Bereiche, Timeout/Abbruch, Quellenisolation, veraltete Revisionen und Prozessneustart ab. Ein echter Ollama-Lauf bleibt bis zur Verfügbarkeit des Autoren-PCs zurückgestellt. Die Tests belegen **technische Funktionsfähigkeit**, nicht kreative Originalität oder Qualität.
+`.venv/bin/python -m pytest -q`: **94 bestanden**, einschließlich aller bisherigen 76. Neue Fake-Provider-Tests decken zehn Operationen, freie und bestätigte Quellen, gespeicherte Quellen, ausgewählte Kritikbereiche, Stärken ohne erzwungene Befunde, Karten-/Manifestabgleich, Schutzkonflikte, fehlende Schutzprüfungen, ungültige Karten und Bereiche, Timeout/Abbruch, Quellenisolation, veraltete Revisionen und Prozessneustart ab. Ein echter Ollama-Lauf bleibt bis zur Verfügbarkeit des Autoren-PCs zurückgestellt. Die Tests belegen **technische Funktionsfähigkeit**, nicht kreative Originalität oder Qualität.
 
 Neu: `src/storyforge/autorenredaktion.py`, `tests/test_autorenredaktion.py`, dieser Bericht. Geändert: `src/storyforge/__init__.py`, `README.md`, `AGENTS.md`. Alle Teststoffe sind synthetisch. Keine privaten Hörspielskripte, Projektdatenbanken oder Zugangsdaten gehören zum Commit.
 
@@ -32,3 +32,35 @@ Neu: `src/storyforge/autorenredaktion.py`, `tests/test_autorenredaktion.py`, die
 
 - Semantische Bewahrung geschützter Elemente, Kausalität und wissenschaftliche Plausibilität können ohne redaktionelle Prüfung oder echte Recherche nicht bewiesen werden.
 - Eine spätere fachliche Entscheidung ist nötig, wenn komplexe Mutationsalternativen vollständig in den Kanon übernommen werden sollen. SF-004 und weitere Verfahren wurden nicht implementiert.
+
+## Abschlussprüfung der 15 Akzeptanzkriterien
+
+1. **Beide Verfahren:** V04 und V05 sind unabhängig mit je einem Modellaufruf nutzbar.
+2. **Operationen:** Alle zehn `Operation`-Werte werden durchlaufen und die Modellantwort muss die gewählte Operation bestätigen.
+3. **Quellen:** Freier Text, bestätigte Idee und gespeicherter Creative Run sind geprüft.
+4. **Schutz:** Jede Alternative prüft alle geschützten Elemente einzeln; fehlende oder doppelte Angaben werden abgelehnt.
+5. **Folgen:** Änderungen sowie kausale, dramaturgische, Figuren-, Geheimnis- und Hörspielfolgen haben eigene Ergebnisfelder.
+6. **Bereiche:** Einzelne und kombinierte `Analysebereich`-Werte werden geprüft; fremde Bereiche werden abgelehnt.
+7. **Befunde:** Konkreter Materialbezug, Begründung und Verbesserung sind Pflichtfelder.
+8. **Stärken und Unsicherheit:** Stärken, zu Bewahrendes, Nachteile und Unsicherheit bleiben sichtbar; eine leere Befundliste ist zulässig.
+9. **Kartenkontext:** Übermittelte Karten-IDs und Versionen entsprechen dem Manifest; unbekannte Ergebnis-IDs werden abgelehnt.
+10. **Persistenz:** Ein separater Python-Prozess liest Manifest und Ergebnis aus SQLite erneut.
+11. **Isolation:** Creative Runs müssen Projekt, Variante und aktuelle Ausgangsrevision treffen; fremde und veraltete Quellen werden abgelehnt.
+12. **Kanon:** Kein Verfahren ruft `approve` auf oder ändert den Revisionskopf.
+13. **Fehler:** Ungültiges JSON, Schutzwiderspruch, falsche Karten/Bereiche, Timeout, Abbruch auch nach Antwort und paralleler Revisionswechsel werden ohne gespeicherten Lauf behandelt.
+14. **Regression:** Die bisherigen 76 Tests bestehen weiter.
+15. **Neue Tests:** Insgesamt bestehen **94** automatisierte Tests.
+
+Eine Schutzprüfung mit Status `verletzt` bleibt sichtbar. Eindeutige interne Widersprüche, etwa dass dasselbe Element zugleich als verletzt und bewahrt bezeichnet wird, werden abgelehnt. Dies erkennt nur wörtlich identische Elemente; semantische Bewahrung verlangt weiterhin Autorenprüfung. Die Promptinspektion fand keine festen Beats oder Pflichtdramaturgie. V04 verlangt gezielte Varianten statt vollständiger Neugenerierung; V05 erlaubt ausdrücklich eine Kritik ohne negative Befunde. Gemeinsame Hinweise wiederholen sich nur einmal je Modellaufruf. Die Prüfung belegt Form und technische Schutzregeln, nicht tatsächliche kreative Qualität.
+
+## Öffentliche Schnittstellen V01–V05 für SF-004
+
+| Verfahren | Einstieg | Ergebnis und Speicherung | Verbindlichkeit |
+| --- | --- | --- | --- |
+| V01 Gespräch | `Dialogue(memory, provider).ask(project_id, branch_id, task, structured=False, cards=None, persist=True)` | `DialogueResult`; Gespräch in `conversation_turns` bei `persist=True` | Freier Text ändert keinen Kanon. `structured=True` erzeugt nur einen SF-001-Entwurf. |
+| V02 Stoffschmiede | `Stoffschmiede(memory, provider, library).develop(project_id, branch_id, task, count=3, reflect=False)` | `StoffschmiedeErgebnis`; `creative_runs` | `stage_candidate(run_id, candidate_id)` erzeugt nur einen freizugebenden Entwurf. |
+| V03 Geheimnislabor | `Geheimnislabor(memory, provider, library).develop(project_id, branch_id, task, mode=Arbeitsweise.RUECKWAERTS, ...)` | `GeheimnisErgebnis`; `get_result(run_id)` | Hypothesen bleiben kreative Entwürfe. |
+| V04 Mutation | `Autorenredaktion(memory, provider, library).mutate(project_id, branch_id, task, Quelle(...), operation=Operation.INVERSION, ...)` | `Verfahrensergebnis` mit `Mutationsantwort`; `get_result(run_id)` | Alternativen bleiben kreative Entwürfe. |
+| V05 Kritik | `Autorenredaktion(memory, provider, library).critique(project_id, branch_id, task, Quelle(...), bereiche=(Analysebereich.KAUSALITAET,))` | `Verfahrensergebnis` mit `Kritikantwort`; `get_result(run_id)` | Befunde bleiben kreative Entwürfe. |
+
+Alle Einstiege benötigen ein ausgewähltes Projekt und eine Variante. Die Provider-Schnittstelle erlaubt `FakeProvider` für Tests und lokalen `OllamaProvider`; ein echter Ollama-Test bleibt zurückgestellt. SF-004 ist hier nur durch die Dokumentation vorbereitet, nicht implementiert.
