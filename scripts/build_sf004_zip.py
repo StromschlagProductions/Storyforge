@@ -12,6 +12,7 @@ def files():
     yield ROOT / 'pyproject.toml'
     yield ROOT / 'Start_Storyforge.bat'
     yield ROOT / 'WINDOWS_KURZANLEITUNG.txt'
+    yield ROOT / 'SF-005_PILOT_KURZANLEITUNG.md'
     source = ROOT / 'src' / 'storyforge'
     for path in sorted(source.rglob('*')):
         if path.is_file() and path.suffix in {'.py', '.js', '.css', '.html', '.png'}:

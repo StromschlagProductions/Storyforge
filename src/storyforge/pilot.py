@@ -166,8 +166,10 @@ class PilotLab:
         start = monotonic()
         if arm in {"A", "B"}:
             schema = _StoffAntwort if case.kind == "stoff" else Mutationsantwort
-            neutral = (f"Entwickle genau {case.count} kurze, unterscheidbare Hörspielansätze. "
-                       "Fülle den gemeinsamen Ergebnisvertrag als JSON aus. "
+            instruction = (f"Entwickle genau {case.count} kurze, unterscheidbare Hörspielansätze. "
+                           if case.kind == "stoff" else
+                           "Entwickle genau eine gezielte Alternative für die schwache Auflösung. ")
+            neutral = (instruction + "Fülle den gemeinsamen Ergebnisvertrag als JSON aus. "
                        "Keine zusätzliche Reflexion.\n" + task)
             if case.kind == "stoff":
                 revision = self.core.get_revision(self.core.list_branches(project_id)[0].head_id)
@@ -275,8 +277,10 @@ class PilotLab:
         with self._db() as db:
             rows = db.execute("SELECT r.*,v.value AS rating FROM runs r LEFT JOIN ratings v ON v.run_id=r.id "
                               "WHERE r.group_id=? ORDER BY r.blind_order", (group_id,)).fetchall()
-        if reveal and any(row["status"] == "fertig" and row["rating"] is None for row in rows):
-            raise ValueError("Alle fertigen Ergebnisse müssen vor der Auflösung bewertet sein")
+        if reveal and (not rows or any(row["status"] == "läuft" or
+                                    (row["status"] == "fertig" and row["rating"] is None)
+                                    for row in rows)):
+            raise ValueError("Alle gestarteten Läufe müssen beendet und fertige Ergebnisse bewertet sein")
         data = []
         for row in rows:
             item = {"blind_id": row["blind_id"], "status": row["status"],
@@ -298,7 +302,12 @@ class PilotLab:
     def markdown(self, group_id: str, *, reveal: bool = False) -> str:
         report = self.report(group_id, reveal=reveal)
         lines = ["# STORYFORGE – Qualitätspilot", "", f"Testfall: {report['case']['id']} – {report['case']['title']}",
+                 f"Testfallversion: {report['case']['version']}",
+                 f"Aufgabe: {report['case']['task']}",
+                 f"Ausgangsmaterial: {report['case']['source'] or 'keines'}",
+                 "Geschützte Elemente: " + ("; ".join(report["case"]["protected"]) or "keine"),
                  f"Modell: {report['model']}", f"Parameter: {json.dumps(report['model_parameters'])}",
+                 f"Wiederholungen: {report['repetitions']}",
                  f"Verfahren aufgelöst: {'ja' if reveal else 'nein'}", ""]
         for run in report["runs"]:
             lines += [f"## Ergebnis {run['blind_id']}", "", f"Status: {run['status']}"]

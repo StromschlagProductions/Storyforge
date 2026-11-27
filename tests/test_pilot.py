@@ -2,6 +2,7 @@
 
 import json
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
@@ -97,6 +98,15 @@ def test_a_b_c_kontext_verblindung_export_und_neustart(tmp_path):
         pilot.rate(row["blind_id"], PilotRating(fascination=4, notes="Synthetischer Test"))
     report = pilot.report(group, reveal=True)
     assert {r["arm"] for r in report["runs"]} == {"A", "B", "C"}
+    by_arm = {run["arm"]: run for run in report["runs"]}
+    assert by_arm["A"]["manifest"]["creative_context"].get("cards", []) == []
+    assert by_arm["B"]["manifest"]["creative_context"]["cards"] == \
+           by_arm["C"]["manifest"]["creative_context"]["cards"]
+    assert len({json.dumps(run["manifest"]["transmitted_requests"][0]["format_schema"], sort_keys=True)
+                for run in report["runs"]}) == 1
+    assert {run["metrics"]["model"] for run in report["runs"]} == {"fake-lokal"}
+    assert {json.dumps(run["metrics"]["model_parameters"], sort_keys=True) for run in report["runs"]} == {
+        json.dumps({"temperature": 0.7, "num_predict": 1024}, sort_keys=True)}
     for run in report["runs"]:
         assert run["metrics"]["calls"] == 1
         assert run["metrics"]["optional_reflection_calls"] == 0
@@ -109,6 +119,9 @@ def test_a_b_c_kontext_verblindung_export_und_neustart(tmp_path):
     assert next(r for r in report["runs"] if r["arm"] == "A")["manifest"]["creative_context"].get("cards", []) == []
     assert pilot.core.list_branches(UUID(data["project_id"]))[0].head_id == head
     assert "Synthetischer Test" in pilot.markdown(group, reveal=True)
+    assert "Testfallversion: 1" in pilot.markdown(group, reveal=True)
+    assert pilot.cases["T01"].task in pilot.markdown(group, reveal=True)
+    assert all("arm" not in run and "manifest" not in run for run in pilot.report(group)["runs"])
     code = ("import json,sys; from storyforge.pilot import PilotLab; "
             "from storyforge import FakeProvider; "
             "p=PilotLab(sys.argv[1],lambda m,o:FakeProvider([]),cases=sys.argv[2],cards=sys.argv[3]); "
@@ -135,6 +148,7 @@ def test_t06_schutz_und_fehler(tmp_path):
     assert pilot.blind_runs(other)[0]["status"] == "fehler"
     assert pilot.blind_runs(other)[0]["error"] == "Lauf fehlgeschlagen"
     assert "Schutzprüfung" in pilot.report(other, reveal=True)["runs"][0]["error"]
+    assert pilot.report(other, reveal=True)["runs"][0]["metrics"]["calls"] == 1
     for error in (ModelTimeout("Zeitüberschreitung"), ModelCancelled("Abbruch")):
         trial = pilot.create_group(config("T06"))
         pilot.provider_factory = lambda model, params: FakeProvider([error],model=model)
@@ -172,6 +186,32 @@ def test_http_testwerkstatt_ohne_ollama(tmp_path):
     assert 'pilot.js' in page and 'pilot-workshop' in page
     script = client.get('/static/pilot.js').text
     assert 'textContent' in script and '.innerHTML' not in script
+    assert 'pilot-preparation' in page and 'pilot-evaluation' in page
+    assert 'pilot-begin-rating' in script
+
+
+def test_leere_aufloesung_verweigert_und_bewertungskriterien_optional(tmp_path):
+    pilot, _ = lab(tmp_path, [])
+    group = pilot.create_group(config())
+    with pytest.raises(ValueError, match="gestarteten"):
+        pilot.report(group, reveal=True)
+    assert PilotRating().model_dump()["mystery"] is None
+
+
+def test_zufaellige_reihenfolge_bleibt_nach_neustart_stabil(tmp_path, monkeypatch):
+    pilot, _ = lab(tmp_path, [])
+    group = pilot.create_group(config())
+    head = pilot.core.list_branches(UUID(pilot._group(group)["project_id"]))[0].head_id
+    pilot.provider_factory = lambda model,params: FakeProvider([stoff_answer(head, [])],model=model)
+    sequence = iter(["ff" * 12, "00" * 12])
+    monkeypatch.setattr("storyforge.pilot.secrets.token_hex", lambda length: next(sequence))
+    pilot.execute(group, "A", 1)
+    pilot.execute(group, "B", 1)
+    with sqlite3.connect(pilot.path) as db:
+        second = db.execute("SELECT blind_id FROM runs WHERE arm='B'").fetchone()[0]
+    assert pilot.blind_runs(group)[0]["blind_id"] == second
+    reopened = PilotLab(pilot.path, lambda model,params: FakeProvider([]),cases=CASES,cards=CARDS)
+    assert reopened.blind_runs(group)[0]["blind_id"] == second
 
 
 def test_testfall_snapshot_bleibt_trotz_dateiaktualisierung(tmp_path):

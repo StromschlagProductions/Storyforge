@@ -17,6 +17,7 @@
   let group = localStorage.getItem('storyforge-pilot-group');
   let running = null;
   let revealed = false;
+  let ratingMode = group !== null && localStorage.getItem('storyforge-pilot-rating-group') === group;
   const status = (message, error=false) => {
     const node = byId('pilot-status');
     node.textContent = message;
@@ -66,8 +67,10 @@
     byId('pilot-group-label').textContent = 'Vergleich ' + group.slice(0,8) +
       ' · ' + report.case.id + ' · ' + report.model;
     byId('pilot-repetition').max = String(report.repetitions);
+    byId('pilot-preparation').classList.toggle('hidden',ratingMode);
+    byId('pilot-evaluation').classList.toggle('hidden',!ratingMode);
     const root = byId('pilot-results'); root.replaceChildren();
-    for (const run of runs) {
+    for (const run of ratingMode ? runs : []) {
       const card = make('article',undefined,'result-card');
       card.append(make('h5','Ergebnis ' + run.blind_id.slice(0,8)),label('Status',run.status));
       if (run.error) card.append(label('Fehler',run.error));
@@ -99,7 +102,10 @@
         temperature:Number(byId('pilot-temperature').value),
         num_predict:Number(byId('pilot-tokens').value)
       })});
-      group = created.id; revealed = false; localStorage.setItem('storyforge-pilot-group',group);
+      group = created.id; revealed = false; ratingMode = false;
+      localStorage.setItem('storyforge-pilot-group',group);
+      localStorage.removeItem('storyforge-pilot-rating-group');
+      byId('pilot-revealed').replaceChildren();
       status('Vergleich angelegt. Starte die Verfahren einzeln.'); await refresh();
     } catch (error) {status(error.message,true);}
   };
@@ -124,6 +130,18 @@
   };
   byId('pilot-cancel').onclick = async () => {
     if (running) await fetch('/api/jobs/' + running + '/cancel',{method:'POST'});
+  };
+  byId('pilot-begin-rating').onclick = async () => {
+    try {
+      const runs = await call('/groups/' + group + '/blind');
+      if (running || !runs.length || runs.some(run => run.status === 'läuft')) {
+        status('Warte auf das Ende aller gestarteten Läufe.',true); return;
+      }
+      ratingMode = true;
+      localStorage.setItem('storyforge-pilot-rating-group',group);
+      status('Bewertung bereit: Methoden bleiben bis zur Auflösung verborgen.');
+      await refresh();
+    } catch (error) {status(error.message,true);}
   };
   byId('pilot-reveal').onclick = async () => {
     try {
