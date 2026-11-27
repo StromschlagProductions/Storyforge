@@ -55,3 +55,7 @@ Die Anwendung wurde mit Chromium auf Linux tatsächlich geöffnet. Projektwechse
 Neu: `src/storyforge/web/` (FastAPI, Launcher-Modul, lokale Oberfläche und zwei Original-Logos), `Start_Storyforge.bat`, `tests/test_web.py`, `docs/tasks/SF-004_Auftrag.md`, dieser Bericht und synthetische Screenshots unter `docs/screenshots/`. Geändert: `pyproject.toml`, `src/storyforge/memory.py` (lesende Listen), `src/storyforge/autorenredaktion.py` (einzelner Keim als Quelle), `README.md`, `AGENTS.md`.
 
 Offen: Ein tatsächlicher Windows-Start und ein echter lokaler Ollama-Lauf auf dem Autoren-PC. Modellqualität, semantische Bewahrung geschützter Inhalte und kreative Originalität sind nicht durch Fake-Provider-Tests nachgewiesen. Der lokale Browser speichert Theme und Modellwahl pro Browserprofil; beim Wechsel des Profils beginnt diese Einstellung neu. Kein Release und kein Push in diesem Entwicklungsauftrag.
+
+## CI-Korrektur der Abschlussprüfung
+
+Der erste veröffentlichte CI-Lauf scheiterte unter Linux, weil der Kartenpfad aus dem Installationsort des Python-Pakets statt aus dem Startordner abgeleitet wurde; der Windows-Job wurde durch den fehlgeschlagenen Matrixjob abgebrochen. Der Kartenpfad wird nun aus dem Arbeitsordner des Launchers beziehungsweise des Tests geladen. Das ZIP wurde neu gebaut. Zusätzlich wurde eine reguläre Paketinstallation in ein getrenntes Verzeichnis geprüft: 59 Karten, Startseite und Logo waren erreichbar. Der erneute GitHub-Actions-Lauf ist für die endgültige Windows-/Linux-Aussage maßgeblich.

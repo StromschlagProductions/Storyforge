@@ -19,7 +19,7 @@ from storyforge import (Analysebereich, Arbeitsweise, Autorenredaktion, Conflict
                         Operation, Quelle, Snapshot, Stoffschmiede)
 
 STATIC = Path(__file__).parent / "static"
-CARDS = Path(__file__).resolve().parents[3] / "library" / "cards"
+CARDS = Path.cwd() / "library" / "cards"
 
 
 class ProjectInput(BaseModel):
