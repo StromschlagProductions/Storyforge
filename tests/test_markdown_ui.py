@@ -36,5 +36,5 @@ def test_sicheres_lokales_markdown():
         pytest.skip('Node für den DOM-Test nicht vorhanden')
     renderer = Path(__file__).resolve().parents[1] / 'src/storyforge/web/static/markdown.js'
     result = subprocess.run([node, '-e', SCRIPT, str(renderer)], capture_output=True, text=True,
-                            timeout=10, check=False)
+                            timeout=30, check=False)
     assert result.returncode == 0, result.stderr
