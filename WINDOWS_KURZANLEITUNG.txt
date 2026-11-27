@@ -1,0 +1,26 @@
+STORYFORGE – Windows-Testdistribution (SF-004)
+==========================================
+
+Voraussetzungen
+- Windows 10/11 und Python 3.10 oder neuer mit dem Befehl "py".
+- Internetzugang nur für die erstmalige Installation der Python-Abhängigkeiten.
+- Optional: lokal installiertes und gestartetes Ollama mit einem installierten Modell.
+  Ollama und Sprachmodelle sind NICHT Bestandteil dieses ZIP-Archivs.
+
+Start
+1. Das gesamte ZIP-Archiv in einen eigenen Ordner entpacken.
+2. Start_Storyforge.bat doppelklicken.
+3. Beim ersten Start installiert der Launcher die Python-Abhängigkeiten in .venv.
+4. Der Standardbrowser öffnet http://127.0.0.1:8765.
+5. Die Konsole geöffnet lassen. Schließen der Konsole beendet STORYFORGE.
+
+Daten und Datenschutz
+- Projekte werden lokal im Unterordner local/ als SQLite-Datenbank gespeichert.
+- Regelmäßig den Ordner local/ sichern. Er gehört nicht in ein öffentliches Repository.
+- Modellanfragen gehen ausschließlich an lokales Ollama unter 127.0.0.1:11434.
+- Ohne Ollama funktionieren Projekte, Varianten, Projektakte und Export.
+- Bei einer belegten Portnummer 8765 den anderen Dienst beenden oder
+  aus einer Konsole .venv\Scripts\python.exe -m storyforge.web --port 8766 starten.
+
+Die Oberfläche ist ein technischer Teststand. Ein echter Windows- und Ollama-Test
+auf dem Autoren-PC steht noch aus. Kein Nachweis kreativer Qualität.

@@ -59,4 +59,4 @@ Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert
 
 ## Autorenoberfläche (SF-004)
 
-Unter Windows `Start_Storyforge.bat` doppelklicken. Die Anwendung öffnet sich lokal im Browser; Ollama wird nur für kreative Modellaufrufe benötigt. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
+Unter Windows `Start_Storyforge.bat` doppelklicken. Für einen einfachen Test steht das vollständige [Windows-ZIP](downloads/Storyforge-SF004-Windows-Test.zip) mit [Kurzanleitung](WINDOWS_KURZANLEITUNG.txt) bereit. Die Anwendung öffnet sich lokal im Browser; Ollama wird nur für kreative Modellaufrufe benötigt. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
