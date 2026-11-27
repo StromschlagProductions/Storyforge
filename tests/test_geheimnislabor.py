@@ -211,3 +211,47 @@ def test_revisionswechsel_waehrend_modellantwort_und_abbruch_danach(tmp_path):
             project.id, branch.id, "Rätsel", mode=Arbeitsweise.RUECKWAERTS, cancel=cancel)
     with sqlite3.connect(memory.path) as db:
         assert db.execute("SELECT COUNT(*) FROM creative_runs").fetchone()[0] == 0
+
+
+def test_matrix_luecken_und_doppelte_paare_sind_ungueltig(tmp_path):
+    memory, project, branch, library = setup(tmp_path)
+    original = answer([{"id": str(uuid4()), "beschreibung": "Erster Ton"},
+                       {"id": str(uuid4()), "beschreibung": "Zweiter Ton"}])
+    assert len(original["matrix"]) == 4
+    for changed in (original["matrix"][:-1],
+                    [*original["matrix"], original["matrix"][0]],
+                    [{**original["matrix"][0], "zustand": "erklärt", "begruendung": ""},
+                     *original["matrix"][1:]]):
+        payload = {**original, "matrix": changed}
+        with pytest.raises(InvalidModelResponse):
+            Geheimnislabor(memory, FakeProvider([json.dumps(payload)]), library).develop(
+                project.id, branch.id, "Zwei Töne", mode=Arbeitsweise.RUECKWAERTS)
+    with sqlite3.connect(memory.path) as db:
+        assert db.execute("SELECT COUNT(*) FROM creative_runs").fetchone()[0] == 0
+
+
+def test_autorwahrheit_prompt_und_karten_manifest(tmp_path):
+    memory, project, branch, library = setup(tmp_path)
+    truth = "Ein synthetischer Resonator erzeugt den Ton."
+    payload = answer(count=1)
+    payload["hypothesen"][0]["verborgener_mechanismus"] = None
+    payload["hypothesen"][0]["enthuellung"] = None
+    provider = FakeProvider([json.dumps(payload, ensure_ascii=False)])
+    result = Geheimnislabor(memory, provider, library).develop(
+        project.id, branch.id, "Ein unkonventionelles mehrdeutiges Rätsel", mode=Arbeitsweise.VORWAERTS,
+        given_truth=truth, card_ids=("M02",), card_limit=3)
+    prompt = provider.requests[0].messages[-1]["content"]
+    for phrase in ("grundverschiedene", "emotionale Folgen", "willkürliche Zusatzannahmen",
+                   "kontrollierte Mehrdeutigkeit", "freie Anregungen", "keine Dramaturgieschablone"):
+        assert phrase in prompt
+    assert truth in prompt
+    assert result.autor_wahrheit == truth == result.manifest["author_given_truth"]
+    assert result.entwurf.hypothesen[0].verborgener_mechanismus is None
+    context = json.loads(provider.requests[0].messages[0]["content"].split("Projektkontext:\n", 1)[1])
+    assert context["projekt"]["id"] == result.manifest["project_id"]
+    assert context["variante"]["id"] == result.manifest["branch_id"]
+    assert context["revision"]["id"] == result.manifest["revision_id"]
+    assert [(c["id"], c["version"]) for c in context["wissenskarten"]] == [
+        (c["id"], c["version"]) for c in result.manifest["cards"]]
+    assert result.manifest["cards"][0]["id"] == "M02"
+    assert Geheimnislabor(Memory(memory.path), FakeProvider([]), library).get_result(result.id) == result

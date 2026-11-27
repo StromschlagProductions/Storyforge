@@ -174,7 +174,8 @@ class Geheimnislabor:
             Arbeitsweise.ALTERNATIVEN: "Entwickle mindestens zwei alternative Auflösungen bei Beachtung aller geschützten Elemente.",
             Arbeitsweise.PRUEFUNG: "Untersuche eine bestehende Erklärung kritisch; eine einzelne Hypothese genügt.",
         }[mode]
-        guidance = (instructions + " Eine faszinierende Auflösung zählt ebenso wie das Rätsel. "
+        guidance = (instructions + " Bei mehreren Hypothesen nutze grundverschiedene Erklärungsmechanismen. "
+                    "Eine faszinierende Auflösung zählt ebenso wie das Rätsel. "
                     "Überraschungen sollen Beobachtungen sinnvoll umdeuten. Vermeide willkürliche Zusatzannahmen; "
                     "beachte emotionale Folgen und hörbare Informationsvermittlung. Lasse kontrollierte Mehrdeutigkeit zu. "
                     "Unterscheide Beobachtung, Interpretation und Hypothese. Bestätigte fiktionale Wahrheit kommt "
