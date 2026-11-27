@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 from storyforge.pilot import PilotConfig, PilotLab, PilotRating
 
 from storyforge import (Analysebereich, Arbeitsweise, Autorenredaktion, ConflictError, Dialogue,
-                        FakeProvider, Geheimnislabor, Memory, NarrativeLibrary, NotFoundError, OllamaProvider,
+                        FakeProvider, Geheimnislabor, Idea, Memory, NarrativeLibrary, NotFoundError, OllamaProvider,
                         Operation, Quelle, Snapshot, Stoffschmiede)
 from .ollama_service import OllamaService, local_models
 
@@ -81,13 +81,23 @@ class AppService:
         try:
             provider = self.provider_factory(request.model)
             options = request.options
+            source_note = self._source_note(request)
+            task = request.task + source_note
             if request.procedure == "V01":
+                def on_chunk(part):
+                    with self.lock:
+                        job["partial"] = job.get("partial", "") + part
+
                 result = Dialogue(self.memory, provider).ask(request.project_id, request.branch_id,
-                                                              request.task, cancel=job["cancel"])
-                payload = {"answer": result.answer, "manifest": result.manifest, "model": result.model}
+                                                              task, cancel=job["cancel"],
+                                                              on_chunk=on_chunk)
+                payload = {"answer": result.answer, "manifest": result.manifest, "model": result.model,
+                           "duration_seconds": result.duration_seconds,
+                           "wall_seconds": result.wall_seconds, "output_tokens": result.output_tokens,
+                           "generation_tokens_per_second": result.generation_tokens_per_second}
             elif request.procedure == "V02":
                 run = Stoffschmiede(self.memory, provider, self.library).develop(
-                    request.project_id, request.branch_id, request.task,
+                    request.project_id, request.branch_id, task,
                     count=int(options.get("count", 3)), reflect=bool(options.get("reflect", False)),
                     cancel=job["cancel"])
                 payload = {"run_id": str(run.id), "candidates": [c.model_dump(mode="json")
@@ -95,7 +105,7 @@ class AppService:
                            if run.reflection else None, "manifest": run.manifest}
             elif request.procedure == "V03":
                 run = Geheimnislabor(self.memory, provider, self.library).develop(
-                    request.project_id, request.branch_id, request.task,
+                    request.project_id, request.branch_id, task,
                     mode=Arbeitsweise(options.get("mode", "rueckwaerts")),
                     given_truth=options.get("given_truth"), cancel=job["cancel"])
                 payload = {"run_id": str(run.id), "result": run.entwurf.model_dump(mode="json"),
@@ -104,7 +114,7 @@ class AppService:
                 source = Quelle.model_validate(options.get("source", {"art": "frei", "beschreibung": request.task}))
                 editor = Autorenredaktion(self.memory, provider, self.library)
                 if request.procedure == "V04":
-                    run = editor.mutate(request.project_id, request.branch_id, request.task, source,
+                    run = editor.mutate(request.project_id, request.branch_id, task, source,
                                         operation=Operation(options.get("operation", "frei")),
                                         erhalten=tuple(options.get("erhalten", [])),
                                         veraenderbar=tuple(options.get("veraenderbar", [])),
@@ -113,7 +123,7 @@ class AppService:
                                         cancel=job["cancel"])
                 else:
                     areas = tuple(Analysebereich(value) for value in options.get("bereiche", list(Analysebereich)))
-                    run = editor.critique(request.project_id, request.branch_id, request.task, source,
+                    run = editor.critique(request.project_id, request.branch_id, task, source,
                                           bereiche=areas, cancel=job["cancel"])
                 payload = {"run_id": str(run.id), "result": run.result.model_dump(mode="json"),
                            "manifest": run.manifest}
@@ -124,6 +134,46 @@ class AppService:
             with self.lock:
                 job["status"] = "abgebrochen" if job["cancel"].is_set() else "fehler"
                 job["error"] = f"{type(error).__name__}: {error}"
+
+    def _source_note(self, request: JobInput) -> str:
+        options = request.options
+        turn_id = options.get("source_turn_id")
+        run_id = options.get("source_run_id")
+        if turn_id and run_id:
+            raise ValueError("Nur eine Ausgangsquelle zulässig")
+        if options.get("source_candidate_id") and not run_id:
+            raise ValueError("Kandidat ohne kreatives Ausgangsergebnis")
+        if run_id and request.procedure not in {"V01", "V03"}:
+            raise ValueError("Kreative Folgequelle ist hier nicht zulässig")
+        branch = next(b for b in self.memory.list_branches(request.project_id)
+                      if b.id == request.branch_id)
+        if turn_id:
+            turn = self.memory.get_turn(UUID(turn_id), request.project_id, request.branch_id)
+            if turn["revision_id"] != str(branch.head_id):
+                raise ConflictError("Gesprächsquelle basiert auf einer veralteten Revision")
+            if turn["role"] != "assistant":
+                raise ValueError("Nur KI-Gesprächsbeiträge als Quelle verwenden")
+            source = options.get("source")
+            if source and request.procedure not in {"V04", "V05"}:
+                raise ValueError("Gesprächsquelle ist hier nicht zulässig")
+            if source and source.get("beschreibung") != turn["content"]:
+                raise ValueError("Gesprächsquelle wurde verändert")
+            return f"\nAusgewählter Gesprächsbeitrag:\n{turn['content']}" if not source else \
+                   "\nAusgewählter Gesprächsbeitrag als Ausgangsmaterial."
+        if run_id:
+            run = self.memory.get_creative_run(UUID(run_id))
+            if (run["project_id"], run["branch_id"]) != (str(request.project_id), str(request.branch_id)):
+                raise NotFoundError(run_id)
+            if run["revision_id"] != str(branch.head_id):
+                raise ConflictError("Kreative Quelle basiert auf einer veralteten Revision")
+            candidate_id = options.get("source_candidate_id")
+            candidates = run["candidates"]
+            if candidate_id:
+                candidates = [item for item in candidates if item.get("id") == candidate_id]
+                if not candidates:
+                    raise NotFoundError(candidate_id)
+            return "\nAusgewähltes kreatives Ergebnis:\n" + json.dumps(candidates, ensure_ascii=False)
+        return ""
 
     def state(self, job_id: str) -> dict:
         with self.lock:
@@ -263,7 +313,24 @@ def create_app(database: Path, library: Path = CARDS, provider_factory=OllamaPro
 
     @app.get("/api/projects/{project_id}/turns")
     def turns(project_id: UUID, branch_id: UUID):
-        return service.memory.list_turns(project_id, branch_id, limit=100)
+        return service.memory.list_turns(project_id, branch_id, limit=None)
+
+    @app.post("/api/turns/{turn_id}/stage")
+    def stage_turn(turn_id: UUID, project_id: UUID, branch_id: UUID):
+        turn = service.memory.get_turn(turn_id, project_id, branch_id)
+        if turn["role"] != "assistant":
+            raise ValueError("Nur KI-Gesprächsbeiträge können als Idee vorgemerkt werden")
+        branch = next((b for b in service.memory.list_branches(project_id) if b.id == branch_id), None)
+        if branch is None:
+            raise NotFoundError(branch_id)
+        if turn["revision_id"] != str(branch.head_id):
+            raise ConflictError("Gesprächsbeitrag basiert auf einer veralteten Revision")
+        base = service.memory.get_revision(branch.head_id)
+        idea = Idea(id=uuid4(), title="Idee aus Gespräch", premise=turn["content"],
+                    mechanism="Im Gespräch entwickelt")
+        snapshot = Snapshot(ideas=[*base.snapshot.ideas, idea], decisions=base.snapshot.decisions)
+        return service.memory.propose(branch_id, branch.head_id, snapshot,
+                                      "Gesprächsidee vormerken").model_dump(mode="json")
 
     @app.get("/api/projects/{project_id}/export/{format}")
     def export(project_id: UUID, format: str):

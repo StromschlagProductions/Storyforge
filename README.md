@@ -66,3 +66,5 @@ Unter **Einstellungen** liegt die optionale [SF-005-Testwerkstatt](docs/tasks/SF
 Prozessbesitz, Fehlermeldungen und die vorbereitete Windows-Distribution für alpha.2 sind im [Bericht zum Ollama-Komfort-Patch](docs/tasks/Ollama_Komfortpatch_Ergebnis.md) dokumentiert. Ein GitHub-Release für alpha.2 ist noch nicht erstellt.
 
 Für langsame lokale Modelle und strukturierte Antworten beschreibt [ALPHA-2 Modellkommunikation](docs/tasks/ALPHA2_Modellkommunikation_Ergebnis.md) die Timeout- und Ollama-Limits sowie eine datensparsame lokale Fehlerdiagnose. Der konkrete Gemma-Fehler auf dem Autoren-PC muss mit diesen Diagnosen erneut beobachtet werden.
+
+Die [Gesprächsansicht und kreativen Anschlussaktionen](docs/tasks/ALPHA2_Kreativer_Arbeitsfluss_Ergebnis.md) zeigen den vollständigen Verlauf, freie V01-Antworten während des Ollama-Streamings und sicheres lokales Markdown. Geeignete Beiträge und gespeicherte Ergebnisse können direkt in weitere Verfahren übernommen oder als unverbindlicher Ideenentwurf vorgemerkt werden. Der [Auftrag](docs/tasks/ALPHA2_Kreativer_Arbeitsfluss_Auftrag.md) und zwei synthetische Screenshots sind im Repository hinterlegt.

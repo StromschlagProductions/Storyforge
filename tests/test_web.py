@@ -170,3 +170,165 @@ def test_projekt_und_variante_per_http_nach_neustart(tmp_path):
     with TestClient(create_app(db)) as client:
         restored = client.get('/api/projects/' + project['id']).json()
         assert {b['name'] for b in restored['branches']} == {'Original', 'Zweite Fassung'}
+
+
+def test_streaming_teilantwort_erst_nach_abschluss_persistiert(tmp_path):
+    from threading import Event
+    from storyforge import ModelResponse
+
+    db = tmp_path / 'stream.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetisches Gespräch')
+    branch = memory.list_branches(project.id)[0]
+    first, release = Event(), Event()
+
+    class Streaming(FakeProvider):
+        def generate_stream(self, request, on_chunk, cancel=None):
+            on_chunk('Sichtbarer ')
+            first.set()
+            release.wait(2)
+            if cancel and cancel.is_set():
+                from storyforge import ModelCancelled
+                raise ModelCancelled('Abgebrochen')
+            on_chunk('Abschluss')
+            return ModelResponse(content='Sichtbarer Abschluss', model=self.model,
+                                 wall_seconds=1.5, output_tokens=2,
+                                 generation_tokens_per_second=1.3)
+
+    with TestClient(create_app(db, provider_factory=lambda model: Streaming([]))) as client:
+        job_id = client.post('/api/jobs', json={'project_id': str(project.id),
+            'branch_id': str(branch.id), 'procedure': 'V01', 'task': 'Testfrage', 'model': 'fake'}).json()['id']
+        assert first.wait(2)
+        assert client.get('/api/jobs/' + job_id).json()['partial'] == 'Sichtbarer '
+        assert client.get(f'/api/projects/{project.id}/turns?branch_id={branch.id}').json() == []
+        release.set()
+        done = await_job(client, job_id)
+        assert done['status'] == 'fertig'
+        assert done['result']['output_tokens'] == 2
+    with TestClient(create_app(db)) as restarted:
+        turns = restarted.get(f'/api/projects/{project.id}/turns?branch_id={branch.id}').json()
+        assert [turn['content'] for turn in turns] == ['Testfrage', 'Sichtbarer Abschluss']
+        assert turns[0]['sequence'] < turns[1]['sequence']
+
+
+def test_streaming_abbruch_speichert_keine_teilantwort(tmp_path):
+    from threading import Event
+    from storyforge import ModelCancelled
+
+    db = tmp_path / 'cancel-stream.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetischer Abbruch')
+    branch = memory.list_branches(project.id)[0]
+    first = Event()
+
+    class Streaming(FakeProvider):
+        def generate_stream(self, request, on_chunk, cancel=None):
+            on_chunk('Unvollständig')
+            first.set()
+            cancel.wait(2)
+            raise ModelCancelled('Abgebrochen')
+
+    with TestClient(create_app(db, provider_factory=lambda model: Streaming([]))) as client:
+        job_id = client.post('/api/jobs', json={'project_id': str(project.id),
+            'branch_id': str(branch.id), 'procedure': 'V01', 'task': 'Test', 'model': 'fake'}).json()['id']
+        assert first.wait(2)
+        client.post('/api/jobs/' + job_id + '/cancel')
+        done = await_job(client, job_id)
+        assert done['status'] == 'abgebrochen'
+        assert done['partial'] == 'Unvollständig'
+        assert client.get(f'/api/projects/{project.id}/turns?branch_id={branch.id}').json() == []
+
+
+def test_gespraechsquelle_und_idee_bleiben_projektbezogen_und_unverbindlich(tmp_path):
+    db = tmp_path / 'quellen.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetisches A')
+    other = memory.create_project('Synthetisches B')
+    branch = memory.list_branches(project.id)[0]
+    other_branch = memory.list_branches(other.id)[0]
+    _, turn_id = memory.save_exchange(project.id, branch.id, branch.head_id,
+                                      'Frage', 'Ausgewählter synthetischer Gedanke', {}, 'fake')
+    with TestClient(create_app(db, provider_factory=lambda model: FakeProvider(['Vertiefung']))) as client:
+        wrong = client.post(f'/api/turns/{turn_id}/stage?project_id={other.id}&branch_id={other_branch.id}')
+        assert wrong.status_code == 404
+        proposal = client.post(f'/api/turns/{turn_id}/stage?project_id={project.id}&branch_id={branch.id}').json()
+        assert proposal['status'] == 'offen'
+        assert memory.list_branches(project.id)[0].head_id == branch.head_id
+        job = client.post('/api/jobs', json={'project_id': str(project.id), 'branch_id': str(branch.id),
+            'procedure': 'V01', 'task': 'Vertiefe', 'model': 'fake',
+            'options': {'source_turn_id': str(turn_id)}}).json()['id']
+        assert await_job(client, job)['status'] == 'fertig'
+        turns = client.get(f'/api/projects/{project.id}/turns?branch_id={branch.id}').json()
+        assert 'Ausgewählter synthetischer Gedanke' in turns[-2]['content']
+        foreign_job = client.post('/api/jobs', json={'project_id': str(other.id),
+            'branch_id': str(other_branch.id), 'procedure': 'V01', 'task': 'Fremd', 'model': 'fake',
+            'options': {'source_turn_id': str(turn_id)}}).json()['id']
+        assert await_job(client, foreign_job)['status'] == 'fehler'
+        assert memory.list_turns(other.id, other_branch.id) == []
+        approved = client.post(f"/api/proposals/{proposal['id']}/approve",
+                               json={'author': 'Testautor', 'explicit_approval': True})
+        assert approved.status_code == 200
+        assert client.post(f'/api/turns/{turn_id}/stage?project_id={project.id}&branch_id={branch.id}').status_code == 409
+
+
+def test_gespraechsverlauf_ohne_anzeigegrenze(tmp_path):
+    db = tmp_path / 'voll.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetischer Verlauf')
+    branch = memory.list_branches(project.id)[0]
+    for number in range(55):
+        memory.save_exchange(project.id, branch.id, branch.head_id,
+                             f'Frage {number}', f'Antwort {number}', {}, 'fake')
+    with TestClient(create_app(db)) as client:
+        turns = client.get(f'/api/projects/{project.id}/turns?branch_id={branch.id}').json()
+        assert len(turns) == 110
+        assert turns[0]['content'] == 'Frage 0'
+        assert turns[-1]['content'] == 'Antwort 54'
+
+
+def test_gespeicherter_stoffkeim_als_folgequelle_und_fremdquelle_abgelehnt(tmp_path):
+    from uuid import uuid4
+
+    db = tmp_path / 'folge.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetisches Quellenprojekt')
+    other = memory.create_project('Fremdes Projekt')
+    branch = memory.list_branches(project.id)[0]
+    other_branch = memory.list_branches(other.id)[0]
+    candidate_id = uuid4()
+    run_id = memory.save_creative_run(project.id, branch.id, branch.head_id, 'fake', 'Ideen',
+                                      {'procedure': 'V02'},
+                                      [{'id': str(candidate_id), 'title': 'Gewählter Keim',
+                                        'premise': 'Synthetische Quelle'},
+                                       {'id': str(uuid4()), 'title': 'Anderer Keim'}])
+    provider = FakeProvider(['Neue Antwort'])
+    with TestClient(create_app(db, provider_factory=lambda model: provider)) as client:
+        job = client.post('/api/jobs', json={'project_id': str(project.id), 'branch_id': str(branch.id),
+            'procedure': 'V01', 'task': 'Vertiefe', 'model': 'fake',
+            'options': {'source_run_id': str(run_id), 'source_candidate_id': str(candidate_id)}}).json()['id']
+        assert await_job(client, job)['status'] == 'fertig'
+        sent = provider.requests[0].messages[-1]['content']
+        assert 'Gewählter Keim' in sent and 'Anderer Keim' not in sent
+        wrong = client.post('/api/jobs', json={'project_id': str(other.id),
+            'branch_id': str(other_branch.id), 'procedure': 'V01', 'task': 'Vertiefe', 'model': 'fake',
+            'options': {'source_run_id': str(run_id)}}).json()['id']
+        assert await_job(client, wrong)['status'] == 'fehler'
+        assert memory.list_turns(other.id, other_branch.id) == []
+
+
+def test_gespraechsquelle_darf_nicht_veraendert_werden(tmp_path):
+    db = tmp_path / 'turn-quelle.sqlite3'
+    memory = Memory(db)
+    project = memory.create_project('Synthetisches Gespräch')
+    branch = memory.list_branches(project.id)[0]
+    _, turn_id = memory.save_exchange(project.id, branch.id, branch.head_id,
+                                      'Frage', 'Originaltext', {}, 'fake')
+    with TestClient(create_app(db, provider_factory=lambda model: FakeProvider([critique()]))) as client:
+        job = client.post('/api/jobs', json={'project_id': str(project.id), 'branch_id': str(branch.id),
+            'procedure': 'V05', 'task': 'Prüfen', 'model': 'fake',
+            'options': {'source_turn_id': str(turn_id), 'source': {'art': 'frei',
+                        'beschreibung': 'Veränderter Text'}}}).json()['id']
+        outcome = await_job(client, job)
+        assert outcome['status'] == 'fehler'
+        assert 'verändert' in outcome['error']
+        assert memory.list_creative_runs(project.id, branch.id) == []

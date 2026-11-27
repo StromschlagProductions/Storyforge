@@ -263,15 +263,26 @@ class Memory:
             raise NotFoundError(proposal_id)
         return Proposal.model_validate({**dict(row), "snapshot": json.loads(row["snapshot"])})
 
-    def list_turns(self, project_id: UUID, branch_id: UUID, *, limit: int = 20) -> list[dict]:
-        if limit < 0:
+    def list_turns(self, project_id: UUID, branch_id: UUID, *, limit: int | None = 20) -> list[dict]:
+        if limit is not None and limit < 0:
             raise ValueError("Limit darf nicht negativ sein")
         with self._connection() as db:
-            rows = db.execute("""SELECT * FROM (
+            query = """SELECT * FROM (
                 SELECT rowid AS sequence, * FROM conversation_turns WHERE project_id=? AND branch_id=?
                 ORDER BY sequence DESC LIMIT ?
-            ) ORDER BY sequence""", (str(project_id), str(branch_id), limit)).fetchall()
+            ) ORDER BY sequence"""
+            rows = db.execute(query, (str(project_id), str(branch_id),
+                                      limit if limit is not None else -1)).fetchall()
         return [dict(row) for row in rows]
+
+    def get_turn(self, turn_id: UUID, project_id: UUID, branch_id: UUID) -> dict:
+        with self._connection() as db:
+            row = db.execute("""SELECT * FROM conversation_turns
+                WHERE id=? AND project_id=? AND branch_id=?""",
+                (str(turn_id), str(project_id), str(branch_id))).fetchone()
+        if row is None:
+            raise NotFoundError(turn_id)
+        return dict(row)
 
     def save_exchange(self, project_id: UUID, branch_id: UUID, revision_id: UUID,
                       user_text: str, answer: str, manifest: dict, model: str,

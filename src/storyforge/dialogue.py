@@ -3,6 +3,7 @@
 import json
 import threading
 from dataclasses import dataclass
+from typing import Callable
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
@@ -54,7 +55,8 @@ class Dialogue:
     def ask(self, project_id: UUID, branch_id: UUID, task: str, *, structured: bool = False,
             cards: CardSelection | None = None, format_schema: dict | None = None,
             persist: bool = True,
-            cancel: threading.Event | None = None) -> DialogueResult:
+            cancel: threading.Event | None = None,
+            on_chunk: Callable[[str], None] | None = None) -> DialogueResult:
         if not task.strip():
             raise ValueError("Aufgabenstellung fehlt")
         if structured and (format_schema is not None or not persist):
@@ -111,10 +113,13 @@ class Dialogue:
         messages = [{"role": "system", "content": system}]
         messages.extend({"role": turn["role"], "content": turn["content"]} for turn in history)
         messages.append({"role": "user", "content": task})
-        response: ModelResponse = self.provider.generate(
-            ModelRequest(messages=messages,
-                         format_schema=ProposedChange.model_json_schema() if structured else format_schema,
-                         timeout_seconds=self.timeout_seconds), cancel)
+        request = ModelRequest(messages=messages,
+                               format_schema=ProposedChange.model_json_schema() if structured else format_schema,
+                               timeout_seconds=self.timeout_seconds)
+        if on_chunk is not None and request.format_schema is None and hasattr(self.provider, "generate_stream"):
+            response: ModelResponse = self.provider.generate_stream(request, on_chunk, cancel)
+        else:
+            response = self.provider.generate(request, cancel)
         if cancel is not None and cancel.is_set():
             raise ModelCancelled("Anfrage abgebrochen")
         if not response.content.strip():

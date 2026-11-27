@@ -16,6 +16,15 @@ Start
    Die Launcher-Konsole schließt sich danach. Ollama wird nur beendet, wenn
    STORYFORGE es selbst gestartet hat. Bereits laufende Instanzen bleiben an.
 
+Gespräch und Anschlussaktionen
+- Im Gespräch Enter zum Senden, Umschalt+Enter für einen Zeilenumbruch.
+- Freie Ollama-Antworten erscheinen bereits während der Generierung. Abbruch
+  lässt eine Teilantwort sichtbar, kennzeichnet sie aber als nicht gespeichert.
+- Mit den Aktionen unter geeigneten Ergebnissen ein Geheimnis untersuchen,
+  Varianten entwickeln oder kritisch prüfen. "Als Idee bewahren" erstellt
+  einen Entwurf; verbindlich wird er erst nach ausdrücklicher Freigabe.
+- Der Gesprächsverlauf wird lokal je Projekt und Variante wiederhergestellt.
+
 Daten und Datenschutz
 - Projekte werden lokal im Unterordner local/ als SQLite-Datenbank gespeichert.
 - Regelmäßig den Ordner local/ sichern. Er gehört nicht in ein öffentliches Repository.

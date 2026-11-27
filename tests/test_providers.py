@@ -12,7 +12,7 @@ from storyforge.providers import ModelRequest
 
 
 class OllamaTestServer:
-    def __init__(self, body, *, status=200, delay=0):
+    def __init__(self, body, *, status=200, delay=0, chunks=None):
         self.requests = []
         owner = self
 
@@ -25,7 +25,14 @@ class OllamaTestServer:
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
                 try:
-                    self.wfile.write(body if isinstance(body, bytes) else json.dumps(body).encode())
+                    if chunks is not None:
+                        for chunk in chunks:
+                            self.wfile.write(json.dumps(chunk).encode() + b'\n')
+                            self.wfile.flush()
+                            if delay:
+                                time.sleep(delay)
+                    else:
+                        self.wfile.write(body if isinstance(body, bytes) else json.dumps(body).encode())
                 except (BrokenPipeError, ConnectionResetError):
                     pass
 
@@ -178,3 +185,34 @@ def test_konfigurierbare_ollama_limits_und_timeout(monkeypatch):
     monkeypatch.setenv("STORYFORGE_OLLAMA_NUM_CTX", "unzulässig")
     with pytest.raises(ValueError, match="NUM_CTX"):
         OllamaProvider("gemma")
+
+
+def test_ollama_streaming_liefert_teile_und_endmetrik():
+    chunks = [
+        {"model":"gemma", "message":{"content":"Erster "}, "done":False},
+        {"model":"gemma", "message":{"content":"Teil"}, "done":False},
+        {"model":"gemma", "message":{"content":""}, "done":True,
+         "done_reason":"stop", "eval_count":2, "eval_duration":1_000_000_000},
+    ]
+    seen = []
+    with OllamaTestServer(None, chunks=chunks) as server:
+        result = OllamaProvider("gemma", base_url=server.url).generate_stream(
+            ModelRequest(messages=[{"role":"user", "content":"Synthetisch"}]), seen.append)
+        assert server.requests[0][1]["stream"] is True
+    assert seen == ["Erster ", "Teil"]
+    assert result.content == "Erster Teil"
+    assert result.generation_tokens_per_second == 2
+
+
+def test_ollama_streaming_abbruch_und_fehlender_abschluss():
+    chunks = [{"model":"gemma", "message":{"content":"Teil"}, "done":False},
+              {"model":"gemma", "message":{"content":"Rest"}, "done":True}]
+    cancel = threading.Event()
+    with OllamaTestServer(None, chunks=chunks, delay=.1) as server:
+        with pytest.raises(ModelCancelled):
+            OllamaProvider("gemma", base_url=server.url).generate_stream(
+                ModelRequest(messages=[], timeout_seconds=2), lambda _: cancel.set(), cancel)
+    with OllamaTestServer(None, chunks=chunks[:1]) as server:
+        with pytest.raises(InvalidModelResponse, match="ohne Abschluss"):
+            OllamaProvider("gemma", base_url=server.url).generate_stream(
+                ModelRequest(messages=[]), lambda _: None)
