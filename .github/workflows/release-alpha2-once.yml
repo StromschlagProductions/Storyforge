@@ -1,0 +1,24 @@
+name: Einmaliger Upload ALPHA 2
+on:
+  push:
+    paths:
+      - .github/workflows/release-alpha2-once.yml
+permissions:
+  contents: write
+jobs:
+  release:
+    if: github.repository == 'StromschlagProductions/Storyforge'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v0.1.0-alpha.2
+      - name: Archiv und Pruefsumme pruefen
+        run: sha256sum -c downloads/STORYFORGE-0.1.0-alpha.2-Windows.zip.sha256
+      - name: Release und Assets fertigstellen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view v0.1.0-alpha.2 --repo "$GITHUB_REPOSITORY" >/dev/null || gh release create v0.1.0-alpha.2 --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "STORYFORGE 0.1.0 ALPHA 2" --notes-file docs/releases/STORYFORGE_0.1.0-alpha.2.md
+          gh release upload v0.1.0-alpha.2 downloads/STORYFORGE-0.1.0-alpha.2-Windows.zip downloads/STORYFORGE-0.1.0-alpha.2-Windows.zip.sha256 --repo "$GITHUB_REPOSITORY" --clobber
+          gh release edit v0.1.0-alpha.2 --repo "$GITHUB_REPOSITORY" --title "STORYFORGE 0.1.0 ALPHA 2" --notes-file docs/releases/STORYFORGE_0.1.0-alpha.2.md --draft=false --prerelease
