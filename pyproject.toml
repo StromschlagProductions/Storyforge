@@ -7,13 +7,16 @@ name = "storyforge"
 version = "0.1.0"
 description = "Lokales Projektgedächtnis für Hörspiel-Stoffentwicklung"
 requires-python = ">=3.10"
-dependencies = ["pydantic>=2,<3"]
+dependencies = ["pydantic>=2,<3", "fastapi>=0.115,<1", "uvicorn>=0.30,<1"]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<10"]
+test = ["pytest>=8,<10", "httpx>=0.27,<1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+"storyforge.web" = ["static/*"]

@@ -164,6 +164,51 @@ class Memory:
             raise NotFoundError(project_id)
         return Project.model_validate(dict(row))
 
+    def list_projects(self) -> list[Project]:
+        with self._connection() as db:
+            ids = [UUID(row[0]) for row in db.execute("SELECT id FROM projects ORDER BY rowid DESC")]
+        return [self.get_project(project_id) for project_id in ids]
+
+    def list_creative_runs(self, project_id: UUID, branch_id: UUID | None = None) -> list[dict]:
+        self.get_project(project_id)
+        with self._connection() as db:
+            if branch_id is None:
+                rows = db.execute("SELECT id, project_id, branch_id, revision_id, created_at, model, task, manifest, candidates "
+                                  "FROM creative_runs WHERE project_id=? ORDER BY created_at DESC, rowid DESC",
+                                  (str(project_id),)).fetchall()
+            else:
+                rows = db.execute("SELECT id, project_id, branch_id, revision_id, created_at, model, task, manifest, candidates "
+                                  "FROM creative_runs WHERE project_id=? AND branch_id=? "
+                                  "ORDER BY created_at DESC, rowid DESC",
+                                  (str(project_id), str(branch_id))).fetchall()
+        return [{**dict(row), "manifest": json.loads(row["manifest"]),
+                 "candidates": json.loads(row["candidates"])} for row in rows]
+
+    def list_revisions(self, project_id: UUID, branch_id: UUID | None = None) -> list[Revision]:
+        self.get_project(project_id)
+        with self._connection() as db:
+            if branch_id is None:
+                ids = [UUID(row[0]) for row in db.execute(
+                    "SELECT id FROM revisions WHERE project_id=? ORDER BY created_at DESC, rowid DESC",
+                    (str(project_id),))]
+            else:
+                ids = [UUID(row[0]) for row in db.execute(
+                    "SELECT id FROM revisions WHERE project_id=? AND branch_id=? "
+                    "ORDER BY created_at DESC, rowid DESC", (str(project_id), str(branch_id)))]
+        return [self.get_revision(revision_id) for revision_id in ids]
+
+    def list_proposals(self, project_id: UUID, branch_id: UUID | None = None) -> list[Proposal]:
+        self.get_project(project_id)
+        with self._connection() as db:
+            if branch_id is None:
+                ids = [UUID(row[0]) for row in db.execute(
+                    "SELECT id FROM proposals WHERE project_id=? ORDER BY rowid DESC", (str(project_id),))]
+            else:
+                ids = [UUID(row[0]) for row in db.execute(
+                    "SELECT id FROM proposals WHERE project_id=? AND branch_id=? ORDER BY rowid DESC",
+                    (str(project_id), str(branch_id)))]
+        return [self.get_proposal(proposal_id) for proposal_id in ids]
+
     def list_branches(self, project_id: UUID) -> list[Branch]:
         self.get_project(project_id)
         with self._connection() as db:

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STORYFORGE · Stromschlag Audio</title>
+<link rel="stylesheet" href="/static/style.css">
+<script defer src="/static/app.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <div class="brand"><img id="brand-logo" src="/static/logo-dunkel.png" alt="Stromschlag Audio"><div><h1>STORYFORGE</h1><p>STROMSCHLAG AUDIO · DIE HÖRSPIEL-STOFFSCHMIEDE</p></div></div>
+  <div class="header-tools"><span id="model-status" class="status">Ollama wird geprüft</span><label class="inline">Modell <select id="model-select"></select></label><label class="inline">Ansicht <select id="theme-select"><option value="dark">Classic Dunkel</option><option value="light">Classic Hell</option></select></label></div>
+</header>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="eyebrow">ARBEITSPLATZ</div>
+    <label>Projekt<select id="project-select"></select></label>
+    <button id="new-project" class="quiet">+ Neues Projekt</button>
+    <label>Aktive Variante<select id="branch-select"></select></label>
+    <button id="new-branch" class="quiet">+ Variante anlegen</button>
+    <nav id="nav">
+      <button data-view="V01" class="active">Gespräch <span>V01</span></button>
+      <button data-view="V02">Stoffschmiede <span>V02</span></button>
+      <button data-view="V03">Geheimnislabor <span>V03</span></button>
+      <button data-view="V04">Varianten <span>V04</span></button>
+      <button data-view="V05">Lektorat <span>V05</span></button>
+      <button data-view="akte">Projektakte</button>
+      <button data-view="settings">Einstellungen</button>
+    </nav>
+    <div class="sidebar-foot">LOKAL · DEIN STAND BLEIBT DEINER</div>
+  </aside>
+  <main class="workspace">
+    <div class="workspace-head"><div><div class="eyebrow" id="view-tag">KREATIVER DIALOG · V01</div><h2 id="view-title">Eine Geschichte beginnt im Gespräch.</h2><p id="view-subtitle">Frag frei. Ideen bleiben offen, bis du sie ausdrücklich übernimmst.</p></div><div id="revision-chip" class="chip">Noch kein Projekt</div></div>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <section id="creative-view">
+      <div class="panel composer"><label for="task">Deine Aufgabe</label><textarea id="task" rows="6" placeholder="Was möchtest du an deiner Geschichte erkunden?"></textarea>
+        <div id="source-row" class="field-row hidden"><label>Ausgangsmaterial<select id="source-select"></select></label><label id="source-text-label">Freie Stoffbeschreibung<textarea id="source-text" rows="3" placeholder="Beschreibe den Stoff oder einen Ausschnitt …"></textarea></label></div>
+        <div id="options" class="options"></div>
+        <div class="actions"><button id="run" class="primary">Mit Modell arbeiten</button><button id="cancel" class="quiet hidden">Abbrechen</button><span id="working" class="working"></span></div>
+      </div>
+      <div id="results" class="results"><div class="empty"><strong>Raum für Möglichkeiten.</strong><p>Wähle ein Projekt und gib eine freie Aufgabe ein. Deine Ergebnisse erscheinen hier.</p></div></div>
+    </section>
+    <section id="record-view" class="hidden"></section>
+    <section id="settings-view" class="hidden panel"><h3>Einstellungen</h3><p>STORYFORGE arbeitet lokal. Modellanfragen gehen nur an Ollama auf diesem Computer.</p><p>Theme und gewähltes Modell werden in diesem Browser gespeichert. Projekte und kreative Ergebnisse liegen in der lokalen SQLite-Datenbank.</p><button id="refresh-models" class="quiet">Modelle erneut suchen</button></section>
+  </main>
+</div>
+<dialog id="dialog"><form method="dialog"><h3 id="dialog-title"></h3><p id="dialog-description"></p><input id="dialog-input"><div class="actions"><button value="cancel" class="quiet">Abbrechen</button><button id="dialog-confirm" value="ok" class="primary">Speichern</button></div></form></dialog>
+</body></html>

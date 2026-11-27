@@ -46,13 +46,15 @@ class Quelle(BaseModel):
     model_config = ConfigDict(extra="forbid")
     art: Annotated[str, StringConstraints(pattern=r"^(idee|creative_run|frei)$")]
     id: UUID | None = None
+    candidate_id: UUID | None = None
     beschreibung: Text | None = None
 
     @model_validator(mode="after")
     def check(self):
-        if self.art == "frei" and (self.id is not None or self.beschreibung is None):
+        if self.art == "frei" and (self.id is not None or self.candidate_id is not None or self.beschreibung is None):
             raise ValueError("Freie Quelle braucht Beschreibung ohne ID")
-        if self.art != "frei" and (self.id is None or self.beschreibung is not None):
+        if self.art != "frei" and (self.id is None or self.beschreibung is not None or
+                                   (self.art == "idee" and self.candidate_id is not None)):
             raise ValueError("Gespeicherte Quelle braucht ID ohne Beschreibung")
         return self
 
@@ -147,7 +149,14 @@ class Autorenredaktion:
                 raise NotFoundError(source.id)
             if run["revision_id"] != str(revision.id):
                 raise ConflictError("Kreatives Ausgangsergebnis basiert auf veralteter Revision")
-            material = json.dumps(run["candidates"], ensure_ascii=False)
+            candidates = run["candidates"]
+            if source.candidate_id is not None:
+                candidate = next((item for item in candidates
+                                  if item.get("id") == str(source.candidate_id)), None)
+                if candidate is None:
+                    raise NotFoundError(source.candidate_id)
+                candidates = [candidate]
+            material = json.dumps(candidates, ensure_ascii=False)
         return revision, material
 
     def _cards(self, task: str, *, limit: int, card_ids: tuple[str, ...], procedure: str) -> CardSelection:

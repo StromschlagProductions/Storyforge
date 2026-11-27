@@ -4,7 +4,7 @@ Deutschsprachige KI-gestützte Hörspiel-Autorenwerkstatt von Stromschlag Audio.
 
 Einstieg: [Masterplan](docs/MASTERPLAN.md), [P0-Auftragsplan](docs/tasks/P0_Auftragsplan.md), [Technische Architektur](docs/research/08_Technische_Architektur.md), [Arbeitsregeln](AGENTS.md).
 
-Status: SF-001, SF-002, die Narrative Library SF-003A , die Stoffschmiede SF-003B das Geheimnislabor SF-003C und die Autorenredaktion SF-003D als lokaler Python-Kern implementiert; noch keine Oberfläche. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
+Status: SF-001 bis SF-003D und die lokale Autorenoberfläche SF-004 sind implementiert. Dieses öffentliche Repository enthält ausschließlich bereinigte Dokumentation, Code und synthetische Testdaten. Private kreative Inhalte bleiben lokal.
 
 ## Lokal starten
 
@@ -56,3 +56,7 @@ Stoffideen und Entscheidungen liegen in `Snapshot`-Objekten. `propose` speichert
 ## Narrative Mutation und Kritik (SF-003D)
 
 `Autorenredaktion` entwickelt gezielte Varianten und begründete Kritik aus bestätigten Ideen, gespeicherten kreativen Ergebnissen oder freien Stoffbeschreibungen. Ergebnisse bleiben unverbindliche Creative Runs. Schnittstellen und Datenverträge: [SF-003D-Bericht](docs/tasks/SF-003D_Ergebnis.md).
+
+## Autorenoberfläche (SF-004)
+
+Unter Windows `Start_Storyforge.bat` doppelklicken. Die Anwendung öffnet sich lokal im Browser; Ollama wird nur für kreative Modellaufrufe benötigt. Zwei Classic-Themes, Projektakte, alle Verfahren V01–V05 und Export sind verbunden. Einrichtung und Einschränkungen: [SF-004-Ergebnis](docs/tasks/SF-004_Ergebnis.md).
